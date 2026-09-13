@@ -797,6 +797,25 @@
     line-height: 1.4;
   }
 
+  .toast-cart-btn {
+    background: #10b981;
+    color: #ffffff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: $radius-xs;
+    font-size: 0.76rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    font-family: inherit;
+    transition: all $transition;
+
+    &:hover {
+      background: darken(#10b981, 8%);
+      transform: scale(1.03);
+    }
+  }
+
   &.fade-out {
     opacity: 0;
     transform: translateY(10px);

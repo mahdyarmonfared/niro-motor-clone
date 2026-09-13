@@ -269,6 +269,31 @@ body.dark-theme {
         color: $dark-text;
       }
     }
+
+    .prod-bottom-actions {
+      .btn-action-details {
+        background: $dark-surface-2;
+        border-color: $dark-border;
+        color: $dark-text;
+
+        &:hover {
+          background: $primary-mid;
+          color: $white;
+        }
+      }
+
+      .btn-action-calc {
+        background: $dark-surface-2;
+        border-color: $dark-border;
+        color: #38bdf8;
+      }
+
+      .btn-action-unavailable {
+        background: $dark-surface-2;
+        border-color: $dark-border;
+        color: #64748b;
+      }
+    }
   }
 
   .show-more-btn {

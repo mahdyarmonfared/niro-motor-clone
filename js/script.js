@@ -216,7 +216,7 @@ const formatPrice = (num) => {
 // ══════════════════════════════════════
 // 3. TOAST NOTIFICATION COMPONENT
 // ══════════════════════════════════════
-window.showToast = (message, type = "success") => {
+window.showToast = (message, type = "success", showCartBtn = false) => {
   let container = document.getElementById("toast-container");
   if (!container) {
     container = document.createElement("div");
@@ -231,9 +231,14 @@ window.showToast = (message, type = "success") => {
   if (type === "info") icon = "bx-info-circle";
   if (type === "error") icon = "bx-error-circle";
 
+  const cartBtnHtml = showCartBtn
+    ? `<button class="toast-cart-btn" onclick="openCartModal(); this.closest('.toast-item').remove();">مشاهده سبد</button>`
+    : "";
+
   toast.innerHTML = `
     <i class="bx ${icon}"></i>
     <span>${message}</span>
+    ${cartBtnHtml}
   `;
 
   container.appendChild(toast);
@@ -241,7 +246,7 @@ window.showToast = (message, type = "success") => {
   setTimeout(() => {
     toast.classList.add("fade-out");
     setTimeout(() => toast.remove(), 300);
-  }, 3200);
+  }, 3500);
 };
 
 // ══════════════════════════════════════
@@ -423,15 +428,21 @@ const initBestSellersSlider = () => {
     .map(
       (product) => `
     <div class="product-card" data-id="${product.id}">
-      <img src="${product.img}" alt="${product.name}" loading="lazy" />
-      <h3 class="product-name">${product.name}</h3>
+      <img src="${product.img}" alt="${product.name}" loading="lazy" onclick="openProductQuickView('${product.id}')" style="cursor: pointer;" />
+      <h3 class="product-name" onclick="openProductQuickView('${product.id}')" style="cursor: pointer;">${product.name}</h3>
       <span class="product-price ${!product.available ? "unavailable" : ""}">${product.price}</span>
-      <div style="display: flex; gap: 6px; width: 100%;">
-        <button class="btn-detail" style="background: #10b981; flex: 1;" onclick="addToCart('${product.id}', event)">
-          <i class="bx bx-cart-add"></i> خرید
-        </button>
-        <button class="btn-detail" style="flex: 1;" onclick="openProductQuickView('${product.id}')">
-          جزئیات
+      <div style="display: flex; flex-direction: column; gap: 6px; width: 100%; margin-top: 8px;">
+        ${
+          product.available
+            ? `<button class="btn-bestseller-cart" onclick="addToCart('${product.id}', event)">
+                <i class="bx bx-cart-add"></i> افزودن به سبد خرید
+              </button>`
+            : `<button class="btn-bestseller-cart" style="background: #94a3b8; cursor: not-allowed;" disabled>
+                <i class="bx bx-x-circle"></i> ناموجود
+              </button>`
+        }
+        <button class="btn-detail" onclick="openProductQuickView('${product.id}')">
+          <i class="bx bx-detail"></i> مشخصات فنی
         </button>
       </div>
     </div>
@@ -546,6 +557,9 @@ const renderProductsGrid = () => {
           <button class="${isFav ? "active-fav" : ""}" title="افزودن به علاقه‌مندی‌ها" onclick="toggleWishlist('${product.id}', event)">
             <i class="bx ${isFav ? "bxs-heart" : "bx-heart"}"></i>
           </button>
+          <button title="افزودن به سبد خرید" onclick="addToCart('${product.id}', event)">
+            <i class="bx bx-cart-add"></i>
+          </button>
           <button title="مقایسه فنی" onclick="toggleCompare('${product.id}', event)">
             <i class="bx ${isComparing ? "bx-check-double" : "bx-git-compare"}"></i>
           </button>
@@ -585,17 +599,28 @@ const renderProductsGrid = () => {
           <div class="spec-item"><span class="spec-label">کلاس</span><span class="spec-value">${product.category}</span></div>
         </div>
 
-        <div style="display: flex; gap: 8px; margin-top: 10px;">
+        <div class="prod-bottom-actions">
           ${
             product.available
-              ? `<button class="btn-view-details" style="flex: 1; background: #10b981; margin-top: 0;" onclick="addToCart('${product.id}', event)">
-                  <i class="bx bx-cart-add"></i> خرید
+              ? `<button class="btn-action-cart" onclick="addToCart('${product.id}', event)">
+                  <i class="bx bx-cart-add"></i> افزودن به سبد خرید
                 </button>`
-              : ""
+              : `<button class="btn-action-unavailable" disabled>
+                  <i class="bx bx-bell"></i> اطلاع از موجودی کالا
+                </button>`
           }
-          <button class="btn-view-details" style="flex: 1; margin-top: 0;" onclick="openProductQuickView('${product.id}')">
-            <i class="bx bx-info-circle"></i> جزئیات
-          </button>
+          <div class="btn-action-row">
+            <button class="btn-action-details" onclick="openProductQuickView('${product.id}')" title="مشاهده مشخصات فنی">
+              <i class="bx bx-detail"></i> مشخصات فنی
+            </button>
+            ${
+              product.installmentEligible
+                ? `<button class="btn-action-calc" onclick="openInstallmentModalFor('${product.id}', event)" title="محاسبه اقساطی">
+                    <i class="bx bx-calculator"></i> اقساط
+                  </button>`
+                : ""
+            }
+          </div>
         </div>
       </div>
     `;
@@ -805,7 +830,16 @@ const initLiveSearch = () => {
             </div>
           </div>
         </div>
-        <div class="res-price">${product.price}</div>
+        <div class="res-price-wrap" style="display: flex; align-items: center; gap: 10px;">
+          <div class="res-price">${product.price}</div>
+          ${
+            product.available
+              ? `<button class="btn-search-cart" onclick="event.stopPropagation(); addToCart('${product.id}', event); closeSearch();" title="افزودن به سبد خرید" style="background: #10b981; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.78rem; font-family: inherit; font-weight: 700; display: flex; align-items: center; gap: 4px; white-space: nowrap;">
+                  <i class="bx bx-cart-add"></i> افزودن به سبد
+                </button>`
+              : ""
+          }
+        </div>
       </div>
     `,
       )
@@ -880,14 +914,24 @@ window.openProductQuickView = (productId, event) => {
           <div class="qv-spec-item"><span class="k">سیستم خنک‌کننده</span><span class="v">${product.cooling}</span></div>
         </div>
 
-        <div class="qv-actions" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px;">
+        <div class="qv-cart-row" style="display: flex; align-items: center; gap: 10px; width: 100%; margin: 16px 0 10px;">
           ${
             product.available
-              ? `<button class="btn-view-details" style="flex: 1 1 45%; background: #10b981; margin: 0; padding: 12px 16px;" onclick="addToCart('${product.id}')">
-                  <i class="bx bx-cart-add" style="font-size: 1.2rem;"></i> افزودن به سبد خرید
-                </button>`
-              : ""
+              ? `
+              <div class="qv-qty-picker" style="display: flex; align-items: center; border: 1px solid #cbd5e1; border-radius: 8px; background: #f8fafc; overflow: hidden;">
+                <button type="button" onclick="const q = document.getElementById('qv-qty-val'); if(parseInt(q.textContent) > 1) q.textContent = parseInt(q.textContent) - 1;" style="border: none; background: none; padding: 10px 14px; cursor: pointer; font-size: 1.1rem; font-weight: bold; color: #334155;">-</button>
+                <span id="qv-qty-val" style="min-width: 32px; text-align: center; font-weight: 800; font-size: 1rem; color: #0f172a;">1</span>
+                <button type="button" onclick="const q = document.getElementById('qv-qty-val'); q.textContent = parseInt(q.textContent) + 1;" style="border: none; background: none; padding: 10px 14px; cursor: pointer; font-size: 1.1rem; font-weight: bold; color: #334155;">+</button>
+              </div>
+              <button class="btn-view-details btn-action-cart" style="flex: 1; background: #10b981; margin: 0; padding: 13px 20px; font-size: 0.96rem; font-weight: 800;" onclick="const qty = parseInt(document.getElementById('qv-qty-val') ? document.getElementById('qv-qty-val').textContent : 1); addToCart('${product.id}', event, qty);">
+                <i class="bx bx-cart-add" style="font-size: 1.3rem;"></i> افزودن به سبد خرید
+              </button>
+              `
+              : `<div style="flex: 1; padding: 12px; background: #fee2e2; color: #dc2626; border-radius: 8px; text-align: center; font-weight: 700;">این محصول در حال حاضر ناموجود است</div>`
           }
+        </div>
+
+        <div class="qv-actions" style="display: flex; flex-wrap: wrap; gap: 10px;">
           ${
             product.installmentEligible
               ? `<button class="btn-calc-plan" style="flex: 1 1 45%; margin: 0;" onclick="closeAllModals(); openInstallmentModalFor('${product.id}')">
@@ -917,7 +961,7 @@ window.openProductQuickView = (productId, event) => {
 // ══════════════════════════════════════
 // 11. CART SYSTEM (سبد خرید)
 // ══════════════════════════════════════
-window.addToCart = (productId, event) => {
+window.addToCart = (productId, event, qty = 1) => {
   if (event) event.stopPropagation();
   const product = productsData.find((p) => p.id === productId);
   if (!product) return;
@@ -929,7 +973,7 @@ window.addToCart = (productId, event) => {
 
   const existing = state.cart.find((item) => item.id === productId);
   if (existing) {
-    existing.quantity += 1;
+    existing.quantity += qty;
   } else {
     state.cart.push({
       id: product.id,
@@ -938,13 +982,25 @@ window.addToCart = (productId, event) => {
       price: product.price,
       numericPrice: product.numericPrice,
       img: product.img,
-      quantity: 1,
+      quantity: qty,
     });
   }
 
   localStorage.setItem("niro_cart", JSON.stringify(state.cart));
   updateCartBadges();
-  showToast(`«${product.name}» به سبد خرید افزوده شد.`);
+
+  if (event && event.currentTarget) {
+    const btn = event.currentTarget;
+    const origHtml = btn.innerHTML;
+    btn.innerHTML = '<i class="bx bx-check"></i> به سبد افزوده شد';
+    btn.classList.add("added-animation");
+    setTimeout(() => {
+      btn.innerHTML = origHtml;
+      btn.classList.remove("added-animation");
+    }, 1800);
+  }
+
+  showToast(`«${product.name}» به سبد خرید افزوده شد.`, "success", true);
 };
 
 window.removeFromCart = (productId) => {
@@ -1112,8 +1168,8 @@ window.openWishlistModal = () => {
             </div>
             <div class="item-right">
               <span class="item-price">${b.price}</span>
-              <button class="btn-view-details" style="padding: 4px 10px; font-size: 0.78rem; margin: 0; width: auto; background: #10b981;" onclick="addToCart('${b.id}', event)">
-                <i class="bx bx-cart-add"></i> خرید
+              <button class="btn-view-details" style="padding: 6px 14px; font-size: 0.8rem; margin: 0; width: auto; background: #10b981; white-space: nowrap;" onclick="addToCart('${b.id}', event)">
+                <i class="bx bx-cart-add"></i> افزودن به سبد خرید
               </button>
               <button class="btn-del-fav" onclick="toggleWishlist('${b.id}'); openWishlistModal();" title="حذف"><i class="bx bx-trash"></i></button>
             </div>
@@ -1213,8 +1269,8 @@ window.openCompareModal = () => {
                     <img src="${b.img}" alt="${b.name}" />
                     <div class="bike-head-name">${b.name}</div>
                     <div class="bike-head-price">${b.price}</div>
-                    <button class="btn-view-details" style="padding: 6px 12px; font-size: 0.8rem; margin-top: 8px; background: #10b981;" onclick="addToCart('${b.id}')">
-                      <i class="bx bx-cart-add"></i> خرید
+                    <button class="btn-view-details" style="padding: 6px 12px; font-size: 0.78rem; margin-top: 8px; background: #10b981; width: 100%; white-space: nowrap;" onclick="addToCart('${b.id}', event)">
+                      <i class="bx bx-cart-add"></i> افزودن به سبد خرید
                     </button>
                   </th>
                 `,
