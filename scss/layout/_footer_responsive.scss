@@ -1,0 +1,67 @@
+// FOOTER RESPONSIVE STYLES
+
+// 480px
+@media (max-width: $bp-mobile) {
+  .footer-top {
+    padding: 16px 14px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer-middle {
+    grid-template-columns: 1fr;
+    padding: 20px 14px;
+  }
+
+  .footer-contact {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px 14px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px 14px;
+    text-align: center;
+  }
+
+  .footer-btn {
+    padding: 10px 30px;
+    width: 100%;
+  }
+}
+
+// 768px
+@media (min-width: #{$bp-mobile + 1px}) and (max-width: $bp-tablet) {
+  .footer-top {
+    padding: 20px 30px;
+  }
+
+  .footer-middle {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 24px 20px;
+  }
+
+  .footer-contact {
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px 20px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px 20px;
+    text-align: center;
+  }
+}
+
+// 1024px
+@media (min-width: #{$bp-tablet + 1px}) and (max-width: $bp-desktop-sm) {
+  .footer-middle {
+    grid-template-columns: 1fr 1fr 1fr;
+    padding: 28px 30px;
+  }
+}

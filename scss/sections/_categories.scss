@@ -1,0 +1,98 @@
+// CATEGORIES
+.categories {
+  background: $white;
+  padding: 40px $padding-page;
+  text-align: center;
+  border-top: 1px solid $gray-border;
+
+  > h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $dark;
+    margin-bottom: 32px;
+    position: relative;
+    display: inline-block;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 360px;
+      height: 1px;
+      background: $gray-line;
+    }
+
+    &::before {
+      right: calc(100% + 18px);
+    }
+    &::after {
+      left: calc(100% + 18px);
+    }
+  }
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+}
+
+.category-card {
+  border-radius: $radius-lg;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(to right, $primary-bg 40%, transparent 40%);
+  transition: background 0.3s ease;
+
+  > h3 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: $primary;
+    width: 100%;
+    text-align: right;
+    transition: color 0.3s;
+  }
+
+  > img {
+    width: 88%;
+    height: 155px;
+    object-fit: contain;
+    object-position: bottom center;
+    align-self: center;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover {
+    background: $primary-bg;
+
+    > h3 {
+      color: $dark;
+    }
+  }
+}
+
+// QUICK ACCESS
+.quick-access {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  padding: 28px $padding-page;
+  background: $white;
+}
+
+// INSTALLMENT
+.installment-plan {
+  width: 100%;
+
+  > img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+}

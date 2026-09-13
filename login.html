@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://db.onlinewebfonts.com/c/235b71a9b409e684e865eb4a996e925e?family=IRANYekan"
+      rel="stylesheet"
+    />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="scss/main.css" />
+    <title>ورود و ثبت نام | گروه صنعتی نیرو موتور</title>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="header-site">
+      <div class="header-up">
+        <div class="header-logo-group">
+          <div class="header-logo" onclick="window.location.href = 'index.html'">
+            <img src="assets/img/logo site.svg" alt="نیرو موتور" />
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button class="btn-theme-toggle" id="btn-toggle-theme" title="تغییر تم تاریک / روشن">
+            <i class="bx bx-moon"></i>
+          </button>
+          <button class="btn-login" onclick="window.location.href = 'index.html'">
+            <i class="bx bx-arrow-back"></i>
+            <span>صفحه اصلی</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- LOGIN SECTION -->
+    <section class="login-section">
+      <div class="login-card">
+        <img src="assets/img/logo-footer.svg" alt="نیرو موتور" class="login-logo" />
+        <h2>ورود / عضویت در نیروموتور</h2>
+
+        <div class="login-tabs">
+          <button class="login-tab-btn active" id="tab-otp">ورود با شماره موبایل (پیامک)</button>
+          <button class="login-tab-btn" id="tab-password">ورود با رمز عبور</button>
+        </div>
+
+        <!-- FORM 1: OTP MOBILE -->
+        <form class="login-form" id="form-otp">
+          <!-- STEP 1: MOBILE INPUT -->
+          <div id="otp-step-1">
+            <div class="login-field">
+              <label>شماره تلفن همراه:</label>
+              <input
+                type="tel"
+                id="inp-mobile"
+                placeholder="۰۹xxxxxxxxx"
+                maxlength="11"
+                required
+              />
+              <span class="input-hint">کد تایید ۴ رقمی به این شماره ارسال خواهد شد.</span>
+            </div>
+            <p class="login-error" id="error-step-1"></p>
+            <button type="button" class="login-btn" id="btn-send-otp">
+              دریافت کد تایید
+            </button>
+          </div>
+
+          <!-- STEP 2: VERIFICATION CODE -->
+          <div id="otp-step-2" style="display: none;">
+            <div class="mock-code-banner" id="mock-code-notice">
+              پیامک آزمایشی ارسال شد! کد ورود: <strong id="display-mock-code">۱۲۳۴</strong>
+            </div>
+
+            <div class="otp-box-wrapper" style="margin-top: 10px;">
+              <label style="font-size: 0.88rem; font-weight: 700; color: #333;">کد تایید ۴ رقمی:</label>
+              <input
+                type="text"
+                class="otp-code-input"
+                id="inp-otp-code"
+                placeholder="____"
+                maxlength="4"
+              />
+              <div class="otp-timer">
+                <span>امکان ارسال مجدد تا:</span>
+                <span class="timer-seconds" id="otp-timer-count">02:00</span>
+              </div>
+              <button type="button" class="btn-resend-otp" id="btn-resend" disabled>
+                ارسال مجدد کد تایید
+              </button>
+            </div>
+
+            <p class="login-error" id="error-step-2"></p>
+            <button type="submit" class="login-btn" id="btn-verify-otp">
+              تایید و ورود به سایت
+            </button>
+            <button type="button" style="background: none; border: none; color: #888; font-size: 0.8rem; cursor: pointer; margin-top: 8px; width: 100%; text-align: center;" id="btn-change-mobile">
+              ویرایش شماره موبایل
+            </button>
+          </div>
+        </form>
+
+        <!-- FORM 2: EMAIL / PASSWORD -->
+        <form class="login-form" id="form-password" style="display: none;">
+          <div class="login-field">
+            <label>پست الکترونیکی یا نام کاربری:</label>
+            <input
+              type="email"
+              id="inp-email"
+              placeholder="example@niroomotor.com"
+              required
+            />
+          </div>
+          <div class="login-field">
+            <label>رمز عبور:</label>
+            <input
+              type="password"
+              id="inp-password"
+              placeholder="رمز عبور خود را وارد نمایید"
+              required
+            />
+          </div>
+          <p class="login-error" id="error-password"></p>
+          <button type="submit" class="login-btn" id="btn-login-pass">
+            ورود با کلمه عبور
+          </button>
+        </form>
+
+        <a href="index.html" class="login-back">
+          <i class="bx bx-arrow-back"></i> بازگشت به صفحه اصلی سایت
+        </a>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-bottom">
+        <p>کلیه حقوق مادی و معنوی متعلق به گروه صنعتی نیرو موتور می‌باشد.</p>
+        <div class="footer-social">
+          <a href="#"><i class="bx bxl-instagram"></i></a>
+          <a href="#"><i class="bx bxl-telegram"></i></a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/login.js"></script>
+  </body>
+</html>

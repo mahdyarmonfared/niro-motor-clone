@@ -1,0 +1,221 @@
+// ARTICLES
+.latest-articles {
+  background: $page-bg;
+  padding: 44px $padding-page;
+  border-top: 1px solid $gray-border;
+}
+
+.articles-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+
+  > h2 {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: $dark;
+  }
+
+  > .read-more {
+    font-size: 0.88rem;
+    color: $primary;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+}
+
+.articles-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.article-card {
+  background: $white;
+  border-radius: $radius-lg;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: $shadow-sm;
+  border: 1px solid $gray-border;
+  transition: all $transition;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    box-shadow: $shadow-md;
+    transform: translateY(-4px);
+
+    .article-img-wrap > img {
+      transform: scale(1.05);
+    }
+  }
+
+  .article-img-wrap {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+
+    > img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .article-category-tag {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(18, 45, 99, 0.85);
+      color: $white;
+      padding: 3px 10px;
+      border-radius: $radius-xs;
+      font-size: 0.72rem;
+      font-weight: 700;
+      backdrop-filter: blur(4px);
+    }
+  }
+}
+
+.article-content {
+  padding: 18px 20px 20px;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+
+  > h3 {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: $dark;
+    line-height: 1.6;
+    min-height: 48px;
+  }
+
+  > p {
+    font-size: 0.82rem;
+    color: $gray;
+    line-height: 1.7;
+    margin-top: 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .article-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid $gray-border;
+    font-size: 0.75rem;
+    color: #aaa;
+  }
+}
+
+// TEXT & SEO ACCORDION SECTION
+.text {
+  background: $white;
+  padding: 48px 80px;
+  border-top: 1px solid $gray-border;
+  text-align: right;
+
+  > h2 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: $dark;
+    margin-bottom: 14px;
+    line-height: 1.7;
+  }
+
+  > p {
+    font-size: 0.9rem;
+    color: $gray;
+    line-height: 2.1;
+    margin-bottom: 16px;
+  }
+}
+
+.seo-expandable-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.45s cubic-bezier(0, 1, 0, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  &.expanded {
+    max-height: 2500px;
+    transition: max-height 0.5s ease-in-out;
+  }
+
+  .seo-guide-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 16px 0;
+
+    .seo-guide-card {
+      background: $page-bg;
+      padding: 16px 20px;
+      border-radius: $radius-md;
+      border: 1px solid $gray-border;
+
+      h4 {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: $primary;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      p {
+        font-size: 0.83rem;
+        color: $gray;
+        line-height: 1.9;
+        margin: 0;
+      }
+    }
+  }
+}
+
+.btn-toggle-seo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid $primary;
+  color: $primary;
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: $radius-sm;
+  cursor: pointer;
+  margin-top: 16px;
+  transition: all $transition;
+
+  &:hover {
+    background: $primary;
+    color: $white;
+  }
+
+  i {
+    font-size: 1.1rem;
+    transition: transform $transition;
+  }
+
+  &.open i {
+    transform: rotate(180deg);
+  }
+}
+

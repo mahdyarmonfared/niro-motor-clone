@@ -1,0 +1,44 @@
+// ARTICLES RESPONSIVE STYLES
+// 480px
+@media (max-width: $bp-mobile) {
+  .latest-articles {
+    padding: 20px 14px;
+  }
+
+  .articles-header {
+    > h2 {
+      font-size: 1.3rem;
+    }
+  }
+
+  .articles-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .article-card {
+    > .article-bg {
+      height: 160px;
+    }
+  }
+
+  .text {
+    padding: 20px 14px;
+  }
+}
+
+// 768px
+@media (min-width: #{$bp-mobile + 1px}) and (max-width: $bp-tablet) {
+  .latest-articles {
+    padding: 28px 30px;
+  }
+
+  .articles-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .text {
+    padding: 28px 30px;
+  }
+}

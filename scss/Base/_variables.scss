@@ -1,0 +1,62 @@
+// COLORS
+$primary: #122d63;
+$primary-light: #355a9b;
+$primary-mid: #19438d;
+$primary-soft: #6687c0;
+$primary-bg: #dce8f8;
+$accent-orange: #ff6b35;
+$accent-green: #10b981;
+$accent-red: #ef4444;
+
+$dark: #222;
+$dark-mid: #333;
+$dark-soft: #444;
+$gray: #555;
+$gray-light: #888;
+$gray-lighter: #999;
+$gray-border: #e8e8e8;
+$gray-line: #ddd;
+$page-bg: #f5f6f8;
+$white: #fff;
+
+// DARK THEME COLORS
+$dark-bg: #12141a;
+$dark-surface: #1a1e27;
+$dark-surface-2: #232834;
+$dark-border: #2d3444;
+$dark-text: #e2e8f0;
+$dark-text-muted: #94a3b8;
+
+// FONTS
+$font-main: "IRANYekan", sans-serif;
+$font-en: Arial, sans-serif;
+
+// SPACING
+$padding-page: 60px;
+$padding-sm: 40px;
+
+// BORDER RADIUS
+$radius-xs: 4px;
+$radius-sm: 8px;
+$radius-md: 14px;
+$radius-lg: 18px;
+$radius-xl: 20px;
+$radius-full: 9999px;
+
+// TRANSITIONS
+$transition: 0.2s ease;
+$transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-slider: 700ms cubic-bezier(0.77, 0, 0.18, 1);
+
+// SHADOWS
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 20px rgba(18, 45, 99, 0.08);
+$shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.12);
+$shadow-modal: 0 20px 50px rgba(0, 0, 0, 0.25);
+
+// BREAKPOINTS
+$bp-mobile: 480px;
+$bp-tablet: 768px;
+$bp-desktop-sm: 1024px;
+$bp-desktop: 1200px;
+

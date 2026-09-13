@@ -1,0 +1,770 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://db.onlinewebfonts.com/c/235b71a9b409e684e865eb4a996e925e?family=IRANYekan"
+      rel="stylesheet"
+    />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="scss/main.css" />
+    <title>گروه صنعتی نیرو موتور | بزرگترین تولید کننده موتورسیکلت در ایران</title>
+  </head>
+  <body>
+    <!-- HEADER -->
+    <header class="header-site">
+      <div class="header-up">
+        <div class="header-logo-group">
+          <button class="btn-hamburger" id="btn-open-drawer" aria-label="منوی موبایل">
+            <i class="bx bx-menu"></i>
+          </button>
+          <div class="header-logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+            <img src="assets/img/logo site.svg" alt="نیرو موتور" />
+          </div>
+        </div>
+
+        <div class="header-search">
+          <i class="bx bx-search"></i>
+          <input type="text" placeholder="جستجوی مدل موتور، برند یا حجم سیلندر..." readonly />
+          <span class="search-shortcut">Ctrl+K</span>
+        </div>
+
+        <div class="header-actions">
+          <button class="btn-theme-toggle" id="btn-toggle-theme" title="تغییر تم تاریک / روشن">
+            <i class="bx bx-moon"></i>
+          </button>
+
+          <button class="btn-header-icon" id="btn-open-wishlist" title="علاقه‌مندی‌ها">
+            <i class="bx bx-heart"></i>
+            <span class="badge-counter wishlist-counter" style="display: none;">0</span>
+          </button>
+
+          <button class="btn-header-icon" id="btn-open-compare" title="مقایسه فنی موتورسیکلت‌ها">
+            <i class="bx bx-git-compare"></i>
+            <span class="badge-counter compare-counter" style="display: none;">0</span>
+          </button>
+
+          <button
+            class="btn-login"
+            id="btn-header-login"
+            onclick="window.location.href = 'login.html'"
+          >
+            <i class="bx bx-user"></i>
+            <span>ورود / ثبت نام</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- SEARCH PANEL -->
+      <div class="search-panel">
+        <div class="search-panel-header">
+          <span><i class="bx bx-search"></i> جستجوی هوشمند در محصولات نیروموتور</span>
+          <button class="search-panel-close"><i class="bx bx-x"></i></button>
+        </div>
+        <div class="search-panel-input">
+          <i class="bx bx-search"></i>
+          <input type="text" placeholder="نام مدل (مثلا آپاچی، ان‌تورک، گلکسی، یاماها) یا حجم موتور..." autofocus />
+          <button class="clear-search-btn" title="پاک کردن"><i class="bx bx-x-circle"></i></button>
+        </div>
+        <div class="search-results-list" id="search-results-container"></div>
+      </div>
+      <div class="search-overlay"></div>
+
+      <!-- BOTTOM NAVIGATION & MEGA MENU -->
+      <div class="header-down">
+        <ul>
+          <li><a href="#" style="display: flex; align-items: center; gap: 6px; color: inherit; text-decoration: none;"><i class="bx bx-home"></i> صفحه اصلی</a></li>
+          <li class="has-mega-menu">
+            <i class="bx bx-grid-alt"></i> دسته بندی محصولات <i class="bx bx-chevron-down" style="font-size: 0.8rem;"></i>
+            <div class="mega-menu">
+              <div>
+                <div class="mega-col-title"><i class="bx bx-category"></i> دسته‌بندی بر اساس کلاس</div>
+                <div class="mega-links">
+                  <a href="#products-section" onclick="state.currentCategory = 'اسکوتر'; renderProductsGrid();">
+                    <span>خرید موتور اسکوتر</span>
+                    <span class="count">شهری</span>
+                  </a>
+                  <a href="#products-section" onclick="state.currentCategory = 'استریت'; renderProductsGrid();">
+                    <span>خرید موتور استریت</span>
+                    <span class="count">اسپرت</span>
+                  </a>
+                  <a href="#products-section" onclick="state.currentCategory = 'تریل'; renderProductsGrid();">
+                    <span>خرید موتور تریل</span>
+                    <span class="count">آفرود</span>
+                  </a>
+                  <a href="#products-section" onclick="state.currentCategory = 'ادونچر'; renderProductsGrid();">
+                    <span>خرید موتور مسافرتی (ادونچر)</span>
+                    <span class="count">سفری</span>
+                  </a>
+                </div>
+              </div>
+              <div>
+                <div class="mega-col-title"><i class="bx bx-badge-check"></i> دسته‌بندی بر اساس برند</div>
+                <div class="mega-links">
+                  <a href="#products-section" onclick="state.currentBrand = 'Yamaha'; renderProductsGrid();">
+                    <span>موتورسیکلت‌های یاماها (Yamaha)</span>
+                    <span class="count">ژاپن</span>
+                  </a>
+                  <a href="#products-section" onclick="state.currentBrand = 'TVS'; renderProductsGrid();">
+                    <span>موتورسیکلت‌های تی وی اس (TVS)</span>
+                    <span class="count">هند</span>
+                  </a>
+                  <a href="#products-section" onclick="state.currentBrand = 'Galaxy'; renderProductsGrid();">
+                    <span>موتورسیکلت‌های گلکسی (Galaxy)</span>
+                    <span class="count">SYM</span>
+                  </a>
+                  <a href="#products-section" onclick="state.currentBrand = 'NIROOMOTOR'; renderProductsGrid();">
+                    <span>موتورسیکلت‌های نیرو موتور (احسان/پرواز)</span>
+                    <span class="count">تولید ملی</span>
+                  </a>
+                </div>
+              </div>
+              <div class="mega-banner">
+                <p><i class="bx bx-gift"></i> طرح ویژه خرید اقساطی کلیه محصولات با کمترین کارمزد</p>
+                <button onclick="openInstallmentModalFor(productsData[0].id)">محاسبه اقساط</button>
+              </div>
+            </div>
+          </li>
+          <li id="nav-branches"><i class="bx bx-map"></i> نمایندگی فروش</li>
+          <li id="nav-services"><i class="bx bx-wrench"></i> خدمات پس از فروش و گارانتی</li>
+          <li id="nav-calculator"><i class="bx bx-calculator"></i> محاسبه‌گر اقساط</li>
+          <li class="btn-open-emergency"><i class="bx bx-car"></i> امداد موتور</li>
+        </ul>
+        <a href="tel:02147762" class="header-phone">
+          <i class="bx bx-phone-call"></i>
+          <span>۰۲۱-۴۷۷۶۲</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- MOBILE DRAWER -->
+    <div class="drawer-backdrop" id="drawer-backdrop"></div>
+    <div class="mobile-drawer" id="mobile-drawer">
+      <div class="drawer-header">
+        <img src="assets/img/logo site.svg" alt="نیرو موتور" />
+        <button class="drawer-close" id="btn-close-drawer"><i class="bx bx-x"></i></button>
+      </div>
+      <div class="drawer-nav">
+        <ul>
+          <li>
+            <a href="#" onclick="document.getElementById('mobile-drawer').classList.remove('open'); document.getElementById('drawer-backdrop').classList.remove('open');">
+              <span class="drawer-label"><i class="bx bx-home"></i> صفحه اصلی</span>
+            </a>
+          </li>
+          <li>
+            <button class="drawer-link" id="drawer-cat-toggle">
+              <span class="drawer-label"><i class="bx bx-grid-alt"></i> دسته‌بندی محصولات</span>
+              <i class="bx bx-chevron-down"></i>
+            </button>
+            <div class="drawer-accordion-content" id="drawer-cat-accordion">
+              <a href="#products-section" onclick="state.currentCategory = 'اسکوتر'; renderProductsGrid(); document.getElementById('mobile-drawer').classList.remove('open'); document.getElementById('drawer-backdrop').classList.remove('open');">موتور اسکوتر</a>
+              <a href="#products-section" onclick="state.currentCategory = 'استریت'; renderProductsGrid(); document.getElementById('mobile-drawer').classList.remove('open'); document.getElementById('drawer-backdrop').classList.remove('open');">موتور استریت</a>
+              <a href="#products-section" onclick="state.currentCategory = 'تریل'; renderProductsGrid(); document.getElementById('mobile-drawer').classList.remove('open'); document.getElementById('drawer-backdrop').classList.remove('open');">موتور تریل</a>
+              <a href="#products-section" onclick="state.currentBrand = 'Yamaha'; renderProductsGrid(); document.getElementById('mobile-drawer').classList.remove('open'); document.getElementById('drawer-backdrop').classList.remove('open');">برند یاماها (Yamaha)</a>
+              <a href="#products-section" onclick="state.currentBrand = 'TVS'; renderProductsGrid(); document.getElementById('mobile-drawer').classList.remove('open'); document.getElementById('drawer-backdrop').classList.remove('open');">برند تی وی اس (TVS)</a>
+              <a href="#products-section" onclick="state.currentBrand = 'Galaxy'; renderProductsGrid(); document.getElementById('mobile-drawer').classList.remove('open'); document.getElementById('drawer-backdrop').classList.remove('open');">برند گلکسی (Galaxy)</a>
+            </div>
+          </li>
+          <li>
+            <button class="drawer-link" onclick="renderBranches('all'); document.getElementById('modal-branches').classList.add('open'); document.getElementById('mobile-drawer').classList.remove('open'); document.getElementById('drawer-backdrop').classList.remove('open');">
+              <span class="drawer-label"><i class="bx bx-map"></i> نمایندگی‌های فروش</span>
+            </button>
+          </li>
+          <li>
+            <button class="drawer-link" onclick="document.getElementById('modal-warranty').classList.add('open'); document.getElementById('mobile-drawer').classList.remove('open'); document.getElementById('drawer-backdrop').classList.remove('open');">
+              <span class="drawer-label"><i class="bx bx-shield-quarter"></i> استعلام گارانتی و سفارش</span>
+            </button>
+          </li>
+          <li>
+            <button class="drawer-link" onclick="openInstallmentModalFor(productsData[0].id); document.getElementById('mobile-drawer').classList.remove('open'); document.getElementById('drawer-backdrop').classList.remove('open');">
+              <span class="drawer-label"><i class="bx bx-calculator"></i> محاسبه‌گر اقساط</span>
+            </button>
+          </li>
+          <li>
+            <button class="drawer-link btn-open-emergency" onclick="document.getElementById('modal-emergency').classList.add('open'); document.getElementById('mobile-drawer').classList.remove('open'); document.getElementById('drawer-backdrop').classList.remove('open');">
+              <span class="drawer-label" style="color: #ef4444;"><i class="bx bx-car" style="color: #ef4444;"></i> امداد موتور شبانه‌روزی</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div class="drawer-footer">
+        <a href="tel:02147762" class="drawer-phone">
+          <i class="bx bx-phone-call"></i> ۰۲۱-۴۷۷۶۲
+        </a>
+        <div class="drawer-social">
+          <a href="#"><i class="bx bxl-instagram"></i></a>
+          <a href="#"><i class="bx bxl-telegram"></i></a>
+          <a href="#"><i class="bx bxl-whatsapp"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- HERO SLIDER -->
+    <section class="hero-slider">
+      <div class="hero-track">
+        <img
+          src="assets/img/slide1.webp"
+          class="hero-slide hero-slide--1 show"
+          alt="نیرو موتور اسلاید ۱"
+        />
+        <img
+          src="assets/img/slide2.webp"
+          class="hero-slide hero-slide--2"
+          alt="نیرو موتور اسلاید ۲"
+        />
+        <img
+          src="assets/img/slide3.webp"
+          class="hero-slide hero-slide--3"
+          alt="نیرو موتور اسلاید ۳"
+        />
+        <img
+          src="assets/img/slide4.webp"
+          class="hero-slide hero-slide--4"
+          alt="نیرو موتور اسلاید ۴"
+        />
+        <button class="hero-prev" aria-label="قبلی"><i class="bx bxs-chevron-right"></i></button>
+        <button class="hero-next" aria-label="بعدی"><i class="bx bxs-chevron-left"></i></button>
+      </div>
+    </section>
+
+    <!-- BRANDS -->
+    <section class="brands">
+      <h1>برند های تحت پوشش گروه صنعتی نیرو موتور</h1>
+      <div class="brands-grid">
+        <div class="brand-card" data-brand="Yamaha" title="مشاهده محصولات یاماها">
+          <span class="brand-name">YAMAHA</span>
+          <img src="assets/img/yamaha-bike.png" alt="یاماها" class="brand-bike" />
+        </div>
+        <div class="brand-card" data-brand="Galaxy" title="مشاهده محصولات گلکسی">
+          <span class="brand-name">GALAXY</span>
+          <img src="assets/img/galaxy-bike.png" alt="گلکسی" class="brand-bike" />
+        </div>
+        <div class="brand-card" data-brand="NIROOMOTOR" title="مشاهده محصولات نیرو موتور">
+          <span class="brand-name">NIRO MOTOR</span>
+          <img src="assets/img/niroomotor-bike.png" alt="نیرو موتور" class="brand-bike" />
+        </div>
+        <div class="brand-card" data-brand="TVS" title="مشاهده محصولات تی وی اس">
+          <span class="brand-name">TVS MOTOR</span>
+          <img src="assets/img/tvs-bike.png" alt="تی وی اس" class="brand-bike" />
+        </div>
+      </div>
+    </section>
+
+    <!-- BEST SELLING SLIDER -->
+    <section class="best-selling">
+      <div class="best-selling-title">
+        <img src="assets/img/best seller.png" alt="پرفروش ترین محصولات" />
+        <a href="#products-section">مشاهده همه محصولات</a>
+      </div>
+      <div class="products-slider-wrapper">
+        <button class="prod-prev" id="best-seller-prev" aria-label="قبلی"><i class="bx bxs-chevron-right"></i></button>
+        <div class="products-slides" id="best-seller-slides"></div>
+        <button class="prod-next" id="best-seller-next" aria-label="بعدی"><i class="bx bxs-chevron-left"></i></button>
+      </div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section class="categories">
+      <h2>دسته‌بندی‌های موتورسیکلت</h2>
+      <div class="categories-grid">
+        <div class="category-card" data-category="تریل">
+          <h3>تریل (آفرود)</h3>
+          <img src="assets/img/trail.png" alt="تریل" />
+        </div>
+        <div class="category-card" data-category="ادونچر">
+          <h3>ادونچر (مسافرتی)</h3>
+          <img src="assets/img/adventure.png" alt="ادونچر" />
+        </div>
+        <div class="category-card" data-category="استریت">
+          <h3>استریت (شهری)</h3>
+          <img src="assets/img/street.png" alt="استریت" />
+        </div>
+        <div class="category-card" data-category="اسکوتر">
+          <h3>اسکوتر (اتوماتیک)</h3>
+          <img src="assets/img/scooter.png" alt="اسکوتر" />
+        </div>
+      </div>
+    </section>
+
+    <!-- QUICK ACCESS -->
+    <section class="quick-access">
+      <div class="quick-card" title="مشاهده محصولات">
+        <img src="assets/img/products.png" alt="محصولات نیروموتور" />
+      </div>
+      <div class="quick-card" title="نمایندگی های فروش">
+        <img src="assets/img/Agency.png" alt="نمایندگی های نیروموتور" />
+      </div>
+      <div class="quick-card" title="خدمات پس از فروش">
+        <img src="assets/img/After sales service.png" alt="خدمات پس از فروش نیروموتور" />
+      </div>
+    </section>
+
+    <!-- INSTALLMENT BANNER -->
+    <section class="installment-plan" title="کلیک برای محاسبه آنلاین اقساط">
+      <img src="assets/img/Installment plan.jpg" alt="طرح فروش اقساطی نیرو موتور" />
+    </section>
+
+    <!-- PRODUCTS CATALOG WITH RICH FILTER & SORT -->
+    <section class="products" id="products-section">
+      <h2>کاتالوگ و قیمت روز محصولات نیروموتور</h2>
+
+      <div class="products-filter-bar">
+        <div class="filter-row-top">
+          <div class="brand-filter-tabs">
+            <span style="font-size: 0.82rem; font-weight: 700; color: #555; margin-left: 4px;">برند:</span>
+            <button class="brand-tab active" data-brand="all">همه برندها</button>
+            <button class="brand-tab" data-brand="Yamaha">یاماها (Yamaha)</button>
+            <button class="brand-tab" data-brand="TVS">تی وی اس (TVS)</button>
+            <button class="brand-tab" data-brand="Galaxy">گلکسی (Galaxy)</button>
+            <button class="brand-tab" data-brand="NIROOMOTOR">نیرو موتور</button>
+          </div>
+
+          <div class="sort-and-stock-row">
+            <label class="stock-toggle-label">
+              <input type="checkbox" id="filter-stock" />
+              <span>فقط کالاهای موجود</span>
+            </label>
+
+            <div class="sort-dropdown-wrap">
+              <label for="sort-select">مرتب‌سازی:</label>
+              <select id="sort-select">
+                <option value="default">پیش‌فرض</option>
+                <option value="price-asc">ارزان‌ترین</option>
+                <option value="price-desc">گران‌ترین</option>
+                <option value="engine">بیشترین حجم موتور</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="category-filter-pills">
+          <span style="font-size: 0.8rem; font-weight: 700; color: #555; white-space: nowrap;">کلاس:</span>
+          <button class="cat-pill active" data-category="all">همه کلاس‌ها</button>
+          <button class="cat-pill" data-category="اسکوتر">اسکوتر شهری</button>
+          <button class="cat-pill" data-category="استریت">استریت اسپرت</button>
+          <button class="cat-pill" data-category="تریل">تریل آفرود</button>
+          <button class="cat-pill" data-category="ادونچر">ادونچر مسافرتی</button>
+          <span class="filter-count-badge"></span>
+        </div>
+      </div>
+
+      <div class="products-grid"></div>
+
+      <div class="show-more-wrap">
+        <button class="show-more-btn" id="btn-load-more">
+          <i class="bx bx-plus-circle"></i>
+          <span>مشاهده مدل‌های بیشتر</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ARTICLES -->
+    <section class="latest-articles">
+      <div class="articles-header">
+        <h2>آخرین اخبار و مقالات رسانه نیروموتور</h2>
+        <a href="#" class="read-more">مطالعه تمامی مقالات</a>
+      </div>
+      <div class="articles-grid">
+        <div class="article-card">
+          <div class="article-img-wrap">
+            <img src="assets/img/article1.webp" alt="موتور کراس" />
+            <span class="article-category-tag">ورزشی</span>
+          </div>
+          <div class="article-content">
+            <h3>درخشش تیم فرهنگی-ورزشی نیروموتور در جام راپیدو ریس موتور کراس کشور</h3>
+            <p>تیم موتورسواری نیرو موتور توانست در مسابقات قهرمانی موتورکراس کشوری با موتورسیکلت‌های سری جدید به مقام قهرمانی دست یابد و رکوردهای درخشانی را ثبت کند.</p>
+            <div class="article-footer">
+              <span><i class="bx bx-calendar"></i> ۱۰ آذر ۱۴۰۴</span>
+              <span><i class="bx bx-time-five"></i> زمان مطالعه: ۳ دقیقه</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-img-wrap">
+            <img src="assets/img/article2.webp" alt="جشن یلدا نیرو موتور" />
+            <span class="article-category-tag">رویدادها</span>
+          </div>
+          <div class="article-content">
+            <h3>جشن شب یلدا با حضور ارزشمند خانواده‌های گروه صنعتی نیرو موتور</h3>
+            <p>مراسم بزرگداشت بلندترین شب سال با حضور پرسنل، مدیران و خانواده بزرگ تولیدکنندگان نیرو موتور با تقدیر از کارگران نمونه و نخبگان خط تولید برگزار شد.</p>
+            <div class="article-footer">
+              <span><i class="bx bx-calendar"></i> ۳۰ آذر ۱۴۰۴</span>
+              <span><i class="bx bx-time-five"></i> زمان مطالعه: ۴ دقیقه</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="article-card">
+          <div class="article-img-wrap">
+            <img src="assets/img/article3.webp" alt="گواهینامه بانوان" />
+            <span class="article-category-tag">اخبار صنعت</span>
+          </div>
+          <div class="article-content">
+            <h3>تصویبنامه هیأت وزیران درباره صدور گواهینامه موتورسیکلت‌سواری بانوان</h3>
+            <p>جلیل مجاهد (رئیس انجمن صنعت موتورسیکلت ایران) در گفتگو با روابط عمومی گروه صنعتی نیروموتور جزئیات آیین‌نامه اجرایی و ایمنی موتورسیکلت‌های استاندارد شهری را تشریح کرد.</p>
+            <div class="article-footer">
+              <span><i class="bx bx-calendar"></i> ۱۸ بهمن ۱۴۰۴</span>
+              <span><i class="bx bx-time-five"></i> زمان مطالعه: ۵ دقیقه</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEO EXPANDABLE BUYER GUIDE -->
+    <section class="text">
+      <h2>چرا مسیر را به تنهایی طی کنید وقتی می‌توانید با بهترین‌ها همراه باشید؟</h2>
+      <p>
+        خرید یک موتورسیکلت، تصمیمی فراتر از انتخاب یک وسیله نقلیه است. این انتخاب می‌تواند تجربه‌ای منحصر به فرد از حرکت، آزادی و لذت را به شما هدیه دهد. در نیروموتور، ما این امکان را به شما می‌دهیم که از میان موتورسیکلت‌های با کیفیت بالا، کم‌مصرف و ایمن، گزینه‌ای دقیقاً متناسب با نیاز و سبک زندگی خود پیدا کنید. اینجا شما فقط یک موتور نمی‌خرید، بلکه وارد دنیایی از سرعت، امنیت و راحتی می‌شوید که در آن هر مسیر، تجربه‌ای جدید و متفاوت خواهد بود.
+      </p>
+      <h2>چرا نیروموتور بهترین انتخاب شماست؟</h2>
+      <p>
+        شرکت نیرو موتور با دارا بودن بزرگترین خطوط رباتیک تولید موتورسیکلت و زنجیره تأمین قطعات در کشور، سبدی کامل از مدل‌های شهری، کاب، اسکوتر، مسابقه‌ای و آفرود را تحت برندهای معتبر جهانی مانند یاماها ژاپن و تی‌وی‌اس هندوستان با گارانتی رسمی و شرایط فروش اقساطی ویژه عرضه می‌نماید.
+      </p>
+
+      <div class="seo-expandable-content" id="seo-expandable-content">
+        <div class="seo-guide-grid">
+          <div class="seo-guide-card">
+            <h4><i class="bx bx-tachometer"></i> راهنمای خرید موتور اسکوتر</h4>
+            <p>موتورسیکلت‌های اسکوتر با کلاچ اتوماتیک CVT و مصرف سوخت بسیار ناچیز، بهترین گزینه برای عبور سریع و بدون خستگی از ترافیک‌های سنگین شهری هستند. سواری نرم، محفظه بار جادار و هدایت آسان از مهم‌ترین مزایای اسکوترهاست.</p>
+          </div>
+          <div class="seo-guide-card">
+            <h4><i class="bx bx-bolt-circle"></i> راهنمای خرید موتور استریت</h4>
+            <p>کلاس استریت (نیکد) ترکیب قدرت بالا، طراحی تهاجمی و مانورپذیری فوق‌العاده در معابر شهری است. مجهز به ترمزهای پیشرفته ABS، دنده‌های شتاب‌گیری و فنربندی مستحکم برای علاقه‌مندان به رانندگی اسپرت.</p>
+          </div>
+          <div class="seo-guide-card">
+            <h4><i class="bx bx-compass"></i> راهنمای خرید موتور تریل</h4>
+            <p>اگر اهل ماجراجویی در دل طبیعت، عبور از مسیرهای سنگلاخی، کوهستان و جنگل هستید، موتورهای تریل نیرو موتور با کمک‌فنرهای گازی مرتفع و تایرهای عاج‌دار، پایداری و دوام بی‌نظیری را فراهم می‌کنند.</p>
+          </div>
+          <div class="seo-guide-card">
+            <h4><i class="bx bx-shield"></i> شرایط گارانتی و خدمات پس از فروش</h4>
+            <p>کلیه موتورسیکلت‌های گروه صنعتی نیرو موتور دارای گارانتی معتبر قطعات، کارت طلایی خدمات پس از فروش و شبکه سراسری بیش از ۲۵۰ نمایندگی فعال و امداد موتور سیار در سراسر استان‌های کشور می‌باشند.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn-toggle-seo" id="btn-toggle-seo">
+        <span>مشاهده بیشتر راهنمای خرید</span>
+        <i class="bx bx-chevron-down"></i>
+      </button>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-top">
+        <div class="footer-logo">
+          <img src="assets/img/logo-footer.svg" alt="لوگو فوتر نیرو موتور" />
+        </div>
+        <div class="footer-slogan">
+          <button class="footer-btn">
+            بزرگترین تولیدکننده موتورسیکلت در ایران
+          </button>
+        </div>
+      </div>
+      <div class="footer-middle">
+        <div class="footer-about">
+          <p>
+            شرکت نیروموتور، به‌عنوان بزرگترین تولیدکننده موتورسیکلت در ایران،
+            فعالیت خود را از سال ۱۳۸۱ آغاز کرده و در مدت کوتاهی به رتبه نخست
+            تولیدکنندگان کشور دست یافته است؛ جایگاهی که تا امروز نیز آن را
+            به‌طور مستمر حفظ کرده است.
+          </p>
+        </div>
+        <div class="footer-links">
+          <h4>دسترسی سریع</h4>
+          <ul>
+            <li><a href="#products-section">کاتالوگ محصولات</a></li>
+            <li><a href="#" onclick="openInstallmentModalFor(productsData[0].id)">محاسبه‌گر اقساط</a></li>
+            <li><a href="#">رسانه نیروموتور</a></li>
+            <li><a href="#">درباره ما</a></li>
+            <li><a href="#">تماس با ما</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>راهنمای خرید</h4>
+          <ul>
+            <li><a href="#" onclick="renderBranches('all'); document.getElementById('modal-branches').classList.add('open');">نمایندگی های فروش</a></li>
+            <li><a href="#">نحوه ثبت سفارش اقساطی</a></li>
+            <li><a href="#">رویه تحویل و بیمه نامه</a></li>
+            <li><a href="#">شیوه‌های پرداخت آنلاین</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>خدمات مشتریان</h4>
+          <ul>
+            <li><a href="#">سوالات متداول</a></li>
+            <li><a href="#" onclick="document.getElementById('modal-warranty').classList.add('open');">پیگیری وضعیت سفارش</a></li>
+            <li><a href="#" onclick="document.getElementById('modal-warranty').classList.add('open');"><strong>شرایط و استعلام گارانتی</strong></a></li>
+            <li><a href="#">ثبت شکایات و پیشنهادات</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>خدمات تخصصی</h4>
+          <ul>
+            <li><a href="#" class="btn-open-emergency">امداد موتور شبانه روزی</a></li>
+            <li><a href="#" onclick="document.getElementById('modal-appointment').classList.add('open');">نوبت دهی خدمات سرویس</a></li>
+            <li><a href="#">دفترچه راهنمای محصولات</a></li>
+            <li><a href="#">آیین نامه حقوق مصرف کنندگان</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-contact">
+        <div class="footer-phone">
+          <i class="bx bx-phone"></i>
+          <span>۰۲۱-۴۷۷۶۲</span>
+        </div>
+        <div class="footer-address">
+          <i class="bx bx-map"></i>
+          <span>تهران، خیابان بهشتی، قبل از چهارراه سهروردی، نبش کوچه لیلا، پلاک ۶۹، ساختمان نیروموتور</span>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>
+          کلیه حقوق مادی و معنوی این وب سایت متعلق به گروه صنعتی نیروموتور می‌باشد.
+        </p>
+        <div class="footer-social">
+          <a href="#" title="اینستاگرام"><i class="bx bxl-instagram"></i></a>
+          <a href="#" title="تلگرام"><i class="bx bxl-telegram"></i></a>
+          <a href="#" title="آپارات"><i class="bx bx-video"></i></a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- MODAL: PRODUCT QUICK VIEW -->
+    <div class="modal-backdrop" id="modal-quickview">
+      <div class="modal-card modal-lg">
+        <div class="modal-header">
+          <div class="modal-title"><i class="bx bx-detail"></i> مشخصات فنی کامل موتورسیکلت</div>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body"></div>
+      </div>
+    </div>
+
+    <!-- MODAL: INSTALLMENT CALCULATOR -->
+    <div class="modal-backdrop" id="modal-calculator">
+      <div class="modal-card modal-lg">
+        <div class="modal-header">
+          <div class="modal-title"><i class="bx bx-calculator"></i> محاسبه‌گر هوشمند خرید اقساطی موتورسیکلت</div>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="calculator-container">
+            <div class="calc-form">
+              <div class="calc-field">
+                <label>انتخاب مدل موتورسیکلت:</label>
+                <select id="calc-bike-select"></select>
+              </div>
+
+              <div class="calc-field">
+                <label>
+                  <span>درصد پیش‌پرداخت:</span>
+                  <span class="val-badge" id="calc-down-display">۴۰٪</span>
+                </label>
+                <input type="range" id="calc-down-slider" min="20" max="70" step="5" value="40" />
+                <div class="preset-buttons">
+                  <button class="preset-btn" data-percent="30">۳۰ درصد</button>
+                  <button class="preset-btn active" data-percent="40">۴۰ درصد</button>
+                  <button class="preset-btn" data-percent="50">۵۰ درصد</button>
+                  <button class="preset-btn" data-percent="60">۶۰ درصد</button>
+                </div>
+              </div>
+
+              <div class="calc-field">
+                <label>مدت زمان بازپرداخت اقساط:</label>
+                <div class="months-selection">
+                  <button class="month-btn" data-months="6">۶ ماهه</button>
+                  <button class="month-btn active" data-months="12">۱۲ ماهه</button>
+                  <button class="month-btn" data-months="18">۱۸ ماهه</button>
+                  <button class="month-btn" data-months="24">۲۴ ماهه</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="calc-summary-card">
+              <div class="summary-header">
+                <h4>پیش‌فاکتور محاسباتی اقساط</h4>
+                <div class="selected-bike-name" id="calc-res-bike-name">--</div>
+              </div>
+
+              <div class="summary-rows">
+                <div class="s-row">
+                  <span class="lbl">قیمت نقدی موتور:</span>
+                  <span class="val" id="calc-res-total-price">--</span>
+                </div>
+                <div class="s-row">
+                  <span class="lbl">مبلغ پیش‌پرداخت اولیه:</span>
+                  <span class="val" id="calc-res-down-amount">--</span>
+                </div>
+                <div class="s-row">
+                  <span class="lbl">دوره بازپرداخت:</span>
+                  <span class="val" id="calc-res-months">--</span>
+                </div>
+                <div class="s-row highlight">
+                  <span class="lbl">مبلغ هر قسط ماهانه:</span>
+                  <span class="val" id="calc-res-monthly-pay">--</span>
+                </div>
+                <div class="s-row">
+                  <span class="lbl">مجموع پرداختی کل:</span>
+                  <span class="val" id="calc-res-grand-total">--</span>
+                </div>
+              </div>
+
+              <button class="btn-submit-installment" onclick="alert('درخواست پیش‌خرید اقساطی شما ثبت گردید. کارشناسان فروش نیرو موتور جهت تکمیل مدارک با شما تماس خواهند گرفت.'); closeAllModals();">
+                <i class="bx bx-check-shield"></i> ثبت درخواست خرید اقساطی
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: COMPARE -->
+    <div class="modal-backdrop" id="modal-compare">
+      <div class="modal-card modal-lg">
+        <div class="modal-header">
+          <div class="modal-title"><i class="bx bx-git-compare"></i> جدول مقایسه فنی موتورسیکلت‌ها</div>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body" id="compare-content-container"></div>
+      </div>
+    </div>
+
+    <!-- MODAL: BRANCH LOCATOR -->
+    <div class="modal-backdrop" id="modal-branches">
+      <div class="modal-card modal-lg">
+        <div class="modal-header">
+          <div class="modal-title"><i class="bx bx-map-pin"></i> شعب و نمایندگی‌های رسمی نیرو موتور در سراسر کشور</div>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="branches-tabs">
+            <button class="branch-tab-btn active" data-city="all">همه شعب</button>
+            <button class="branch-tab-btn" data-city="tehran">تهران</button>
+            <button class="branch-tab-btn" data-city="isfahan">اصفهان</button>
+            <button class="branch-tab-btn" data-city="shiraz">شیراز</button>
+            <button class="branch-tab-btn" data-city="mashhad">مشهد</button>
+            <button class="branch-tab-btn" data-city="tabriz">تبریز</button>
+          </div>
+          <div class="branches-list" id="branches-list-container"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: EMERGENCY ROAD ASSISTANCE -->
+    <div class="modal-backdrop" id="modal-emergency">
+      <div class="modal-card modal-sm">
+        <div class="modal-header">
+          <div class="modal-title" style="color: #ef4444;"><i class="bx bx-car"></i> امداد موتور شبانه‌روزی نیرو موتور</div>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="emergency-box">
+            <div class="emergency-icon"><i class="bx bx-phone-call"></i></div>
+            <h3>سامانه فوری امداد ۲۴ ساعته</h3>
+            <p>در صورت بروز هرگونه نقص فنی، پنچری، اتمام سوخت یا تصادف در هر ساعت از شبانه‌روز، امدادگران مجرب نیرو موتور با تجهیزات تخصصی در کنار شما خواهند بود.</p>
+            <a href="tel:02147762" class="emergency-call-btn">
+              <i class="bx bx-phone"></i> تماس فوری: ۰۲۱-۴۷۷۶۲
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: WARRANTY & ORDER TRACKING -->
+    <div class="modal-backdrop" id="modal-warranty">
+      <div class="modal-card modal-sm">
+        <div class="modal-header">
+          <div class="modal-title"><i class="bx bx-shield-quarter"></i> استعلام اصالت گارانتی و پیگیری سفارش</div>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form class="modal-form" onsubmit="event.preventDefault(); alert('اطلاعات وسیله نقلیه و سوابق سرویس با موفقیت استعلام شد: گارانتی فعال تا پایان سال ۱۴۰۵.');">
+            <div class="form-group">
+              <label>شماره شاسی موتورسیکلت (VIN) یا کد پیگیری سفارش:</label>
+              <input type="text" placeholder="مثال: NM-98234710..." required />
+            </div>
+            <div class="form-group">
+              <label>شماره همراه خریدار:</label>
+              <input type="tel" placeholder="۰۹۱۲..." required />
+            </div>
+            <button type="submit" class="form-btn-submit">
+              <i class="bx bx-search"></i> استعلام وضعیت گارانتی
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: SERVICE APPOINTMENT -->
+    <div class="modal-backdrop" id="modal-appointment">
+      <div class="modal-card modal-sm">
+        <div class="modal-header">
+          <div class="modal-title"><i class="bx bx-calendar-event"></i> رزرو آنلاین نوبت سرویس دوره‌ای</div>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <form class="modal-form" onsubmit="event.preventDefault(); alert('نوبت شما با موفقیت رزرو شد. پیامک تایید با کد رهگیری ارسال گردید.'); closeAllModals();">
+            <div class="form-group">
+              <label>نام و نام خانوادگی:</label>
+              <input type="text" placeholder="نام خود را وارد کنید" required />
+            </div>
+            <div class="form-group">
+              <label>شماره تلفن همراه:</label>
+              <input type="tel" placeholder="۰۹..." required />
+            </div>
+            <div class="form-group">
+              <label>مدل موتورسیکلت:</label>
+              <select required>
+                <option value="">انتخاب مدل موتورسیکلت</option>
+                <option value="apache">تی وی اس - آپاچی ۲۰۰</option>
+                <option value="na180">گلکسی NA180</option>
+                <option value="ntorq">تی وی اس NTORQ 125</option>
+                <option value="yamaha">یاماها MT-15</option>
+                <option value="ehsan">احسان / پرواز</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>انتخاب نمایندگی خدمات:</label>
+              <select required>
+                <option value="tehran-beheshti">شعبه مرکزی شهید بهشتی تهران</option>
+                <option value="tehran-helal">شعبه هلال احمر میدان رازی</option>
+                <option value="isfahan">نمایندگی مرکزی اصفهان</option>
+                <option value="shiraz">نمایندگی مرکزی شیراز</option>
+                <option value="mashhad">نمایندگی مرکزی مشهد</option>
+              </select>
+            </div>
+            <button type="submit" class="form-btn-submit">
+              <i class="bx bx-check"></i> ثبت قطعی نوبت سرویس
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: WISHLIST -->
+    <div class="modal-backdrop" id="modal-wishlist">
+      <div class="modal-card modal-sm">
+        <div class="modal-header">
+          <div class="modal-title"><i class="bx bx-heart"></i> لیست علاقه‌مندی‌های شما</div>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body"></div>
+      </div>
+    </div>
+
+    <!-- FLOATING ACTIONS -->
+    <button class="floating-emergency-btn btn-open-emergency" title="امداد موتور ۲۴ ساعته">
+      <i class="bx bx-car"></i>
+      <span>امداد موتور</span>
+    </button>
+    <button class="go-to-top" title="بازگشت به بالای صفحه" aria-label="بالای صفحه"><i class="bx bx-up-arrow-alt"></i></button>
+
+    <script src="js/script.js"></script>
+  </body>
+</html>

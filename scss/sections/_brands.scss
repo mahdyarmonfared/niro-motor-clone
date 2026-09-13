@@ -1,0 +1,74 @@
+.brands {
+  background: $white;
+  padding: 40px $padding-page 32px;
+  text-align: center;
+  border-top: 1px solid $gray-border;
+
+  > h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: $dark;
+    margin-bottom: 36px;
+    position: relative;
+    display: inline-block;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 320px;
+      height: 1px;
+      background: $gray-line;
+    }
+
+    &::before {
+      right: calc(100% + 18px);
+    }
+    &::after {
+      left: calc(100% + 18px);
+    }
+  }
+}
+
+.brands-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: end;
+}
+
+.brand-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 0 24px;
+  border-right: 1px solid $gray-border;
+  cursor: pointer;
+
+  &:first-child {
+    border-right: none;
+  }
+}
+
+.brand-logo {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+}
+
+.brand-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: $primary;
+  font-family: $font-en;
+}
+
+.brand-bike {
+  width: 100%;
+  max-width: 280px;
+  height: 210px;
+  object-fit: contain;
+  object-position: bottom center;
+}

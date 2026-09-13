@@ -1,0 +1,542 @@
+// ══════════════════════════════════════
+// MODALS & POPUPS
+// ══════════════════════════════════════
+
+.modal-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  z-index: 100000;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  overflow-y: auto;
+
+  &.open {
+    display: flex;
+    animation: modalFadeIn 0.25s ease forwards;
+  }
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-card {
+  background: $white;
+  border-radius: $radius-xl;
+  box-shadow: $shadow-modal;
+  width: 100%;
+  max-width: 800px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  animation: modalScaleUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  direction: rtl;
+
+  &.modal-lg {
+    max-width: 950px;
+  }
+
+  &.modal-sm {
+    max-width: 520px;
+  }
+}
+
+@keyframes modalScaleUp {
+  from {
+    transform: scale(0.95) translateY(10px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid $gray-border;
+  background: $page-bg;
+
+  .modal-title {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: $primary;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    i {
+      font-size: 1.3rem;
+    }
+  }
+
+  .modal-close-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: $white;
+    border: 1px solid $gray-border;
+    color: $gray;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all $transition;
+
+    &:hover {
+      background: $accent-red;
+      color: $white;
+      border-color: $accent-red;
+    }
+  }
+}
+
+.modal-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid $gray-border;
+  background: $page-bg;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+// ══════════════════════════════════════
+// PRODUCT QUICK VIEW MODAL
+// ══════════════════════════════════════
+.quickview-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 28px;
+  align-items: start;
+
+  .quickview-gallery {
+    background: $page-bg;
+    border-radius: $radius-lg;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid $gray-border;
+
+    img {
+      max-width: 100%;
+      height: 240px;
+      object-fit: contain;
+    }
+
+    .gallery-brand {
+      margin-top: 12px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: $primary;
+      font-family: $font-en;
+    }
+  }
+
+  .quickview-details {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    .qv-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: $dark;
+    }
+
+    .qv-badges {
+      display: flex;
+      gap: 8px;
+    }
+
+    .qv-price-box {
+      background: rgba(18, 45, 99, 0.05);
+      border-radius: $radius-md;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .qv-price {
+        font-size: 1.3rem;
+        font-weight: 800;
+        color: $primary;
+      }
+    }
+
+    .qv-specs-table {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 8px;
+
+      .qv-spec-item {
+        background: $page-bg;
+        padding: 8px 12px;
+        border-radius: $radius-sm;
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.82rem;
+
+        span.k {
+          color: $gray-light;
+        }
+
+        span.v {
+          font-weight: 700;
+          color: $dark-soft;
+        }
+      }
+    }
+
+    .qv-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+
+      button {
+        flex: 1;
+        padding: 10px 16px;
+        border-radius: $radius-sm;
+        font-size: 0.88rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all $transition;
+
+        &.btn-calc-plan {
+          background: $accent-green;
+          color: $white;
+          border: none;
+
+          &:hover {
+            opacity: 0.9;
+          }
+        }
+
+        &.btn-compare-add {
+          background: $white;
+          border: 1px solid $primary;
+          color: $primary;
+
+          &:hover {
+            background: $primary;
+            color: $white;
+          }
+        }
+      }
+    }
+  }
+}
+
+// ══════════════════════════════════════
+// BRANCH LOCATOR MODAL
+// ══════════════════════════════════════
+.branches-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid $gray-border;
+
+  .branch-tab-btn {
+    padding: 6px 14px;
+    border-radius: $radius-full;
+    background: $page-bg;
+    border: 1px solid $gray-border;
+    color: $dark-mid;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all $transition;
+
+    &.active {
+      background: $primary;
+      color: $white;
+      border-color: $primary;
+    }
+  }
+}
+
+.branches-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+
+  .branch-card-item {
+    background: $page-bg;
+    border-radius: $radius-md;
+    padding: 16px;
+    border: 1px solid $gray-border;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    h4 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: $primary;
+    }
+
+    p {
+      font-size: 0.82rem;
+      color: $gray;
+      line-height: 1.6;
+    }
+
+    .branch-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 6px;
+      font-size: 0.8rem;
+
+      a.phone-link {
+        color: $primary;
+        direction: ltr;
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .badge-type {
+        background: rgba(18, 45, 99, 0.1);
+        color: $primary;
+        padding: 2px 8px;
+        border-radius: $radius-xs;
+        font-size: 0.72rem;
+      }
+    }
+  }
+}
+
+// ══════════════════════════════════════
+// EMERGENCY ASSISTANCE MODAL
+// ══════════════════════════════════════
+.emergency-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+
+  .emergency-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(239, 68, 68, 0.1);
+    color: $accent-red;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    animation: pulse 1.5s infinite;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: $dark;
+  }
+
+  p {
+    color: $gray;
+    font-size: 0.9rem;
+    max-width: 480px;
+    line-height: 1.7;
+  }
+
+  .emergency-call-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: $accent-red;
+    color: $white;
+    padding: 14px 36px;
+    border-radius: $radius-full;
+    font-size: 1.2rem;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.35);
+    transition: transform $transition;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+// ══════════════════════════════════════
+// FORM MODAL (WARRANTY & APPOINTMENT)
+// ══════════════════════════════════════
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: $dark-mid;
+    }
+
+    input, select, textarea {
+      padding: 10px 14px;
+      border-radius: $radius-sm;
+      border: 1px solid $gray-border;
+      font-size: 0.9rem;
+      font-family: inherit;
+      outline: none;
+      direction: rtl;
+
+      &:focus {
+        border-color: $primary;
+        box-shadow: 0 0 0 3px $primary-bg;
+      }
+    }
+  }
+
+  .form-btn-submit {
+    background: $primary;
+    color: $white;
+    border: none;
+    padding: 12px;
+    border-radius: $radius-sm;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background $transition;
+
+    &:hover {
+      background: $primary-mid;
+    }
+  }
+}
+
+// ══════════════════════════════════════
+// WISHLIST MODAL
+// ══════════════════════════════════════
+.wishlist-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: $gray-light;
+
+  i {
+    font-size: 3rem;
+    color: #e2e8f0;
+    margin-bottom: 12px;
+    display: block;
+  }
+}
+
+.wishlist-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  .wishlist-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: $page-bg;
+    border-radius: $radius-md;
+    border: 1px solid $gray-border;
+
+    .item-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+
+      img {
+        width: 70px;
+        height: 50px;
+        object-fit: contain;
+      }
+
+      .item-name {
+        font-weight: 700;
+        font-size: 0.92rem;
+        color: $dark;
+      }
+    }
+
+    .item-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+
+      .item-price {
+        font-weight: 800;
+        color: $primary;
+        font-size: 0.95rem;
+      }
+
+      .btn-del-fav {
+        background: transparent;
+        border: none;
+        color: $accent-red;
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+// RESPONSIVE MODAL
+@media (max-width: $bp-tablet) {
+  .quickview-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .branches-list {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-card {
+    max-height: 95vh;
+  }
+}

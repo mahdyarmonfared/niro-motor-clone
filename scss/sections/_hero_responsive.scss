@@ -1,0 +1,26 @@
+// HERO RESPONSIVE STYLES
+
+// 480px
+@media (max-width: $bp-mobile) {
+  .slide {
+    > img {
+      height: 220px;
+    }
+  }
+
+  .prev,
+  .next {
+    width: 34px;
+    height: 34px;
+    font-size: 0.9rem;
+  }
+}
+
+// 768px
+@media (min-width: #{$bp-mobile + 1px}) and (max-width: $bp-tablet) {
+  .slide {
+    > img {
+      height: clamp(220px, 45vw, 420px);
+    }
+  }
+}

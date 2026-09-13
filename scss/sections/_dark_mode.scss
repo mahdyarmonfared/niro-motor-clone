@@ -1,0 +1,472 @@
+// ══════════════════════════════════════
+// DARK THEME OVERRIDES
+// ══════════════════════════════════════
+
+body.dark-theme {
+  background: $dark-bg;
+  color: $dark-text;
+
+  .header-down {
+    background: $dark-surface;
+    border-bottom-color: $dark-border;
+
+    > ul > li {
+      color: $dark-text-muted;
+
+      > i {
+        color: $primary-soft;
+      }
+
+      &:hover, &.active {
+        color: $white;
+        border-bottom-color: $primary-soft;
+      }
+    }
+  }
+
+  .header-phone {
+    color: $dark-text;
+
+    &:hover {
+      background: $dark-surface-2;
+    }
+  }
+
+  .mega-menu {
+    background: $dark-surface;
+    border-color: $dark-border;
+
+    .mega-col-title {
+      color: $primary-soft;
+      border-bottom-color: $dark-border;
+    }
+
+    .mega-links a {
+      color: $dark-text-muted;
+
+      span.count {
+        background: $dark-surface-2;
+        color: $dark-text-muted;
+      }
+
+      &:hover {
+        background: $dark-surface-2;
+        color: $white;
+      }
+    }
+
+    .mega-banner {
+      background: $dark-surface-2;
+
+      p {
+        color: $white;
+      }
+    }
+  }
+
+  .mobile-drawer {
+    background: $dark-surface;
+    color: $dark-text;
+
+    .drawer-nav ul li a,
+    .drawer-nav ul li button.drawer-link {
+      color: $dark-text;
+
+      &:hover {
+        background: $dark-surface-2;
+      }
+    }
+
+    .drawer-accordion-content {
+      background: $dark-bg;
+
+      a {
+        color: $dark-text-muted;
+
+        &:hover {
+          color: $white;
+        }
+      }
+    }
+
+    .drawer-footer {
+      border-top-color: $dark-border;
+
+      .drawer-phone {
+        background: $dark-surface-2;
+        color: $primary-soft;
+      }
+    }
+  }
+
+  .search-panel {
+    background: $dark-surface;
+    color: $dark-text;
+
+    .search-panel-header span {
+      color: $white;
+    }
+
+    .search-panel-close {
+      background: $dark-surface-2;
+      color: $dark-text-muted;
+    }
+
+    .search-panel-input input {
+      color: $white;
+    }
+
+    .search-result-item {
+      background: $dark-surface-2;
+
+      .res-texts .res-title {
+        color: $white;
+      }
+
+      .res-price {
+        color: $primary-soft;
+      }
+
+      &:hover {
+        background: #2c3342;
+      }
+    }
+  }
+
+  .brands,
+  .categories,
+  .quick-access,
+  .products,
+  .text {
+    background: $dark-bg;
+    border-top-color: $dark-border;
+
+    > h1, > h2 {
+      color: $white;
+
+      &::before, &::after {
+        background: $dark-border;
+      }
+    }
+  }
+
+  .brand-card {
+    border-right-color: $dark-border;
+
+    .brand-name {
+      color: $primary-soft;
+    }
+  }
+
+  .category-card {
+    background: linear-gradient(to right, $dark-surface-2 40%, transparent 40%);
+
+    > h3 {
+      color: $primary-soft;
+    }
+
+    &:hover {
+      background: $dark-surface-2;
+
+      > h3 {
+        color: $white;
+      }
+    }
+  }
+
+  .best-selling,
+  .latest-articles {
+    background: $dark-surface;
+    border-top-color: $dark-border;
+  }
+
+  .latest-articles .articles-header > h2 {
+    color: $white;
+  }
+
+  .product-card,
+  .article-card {
+    background: $dark-surface;
+    border-color: $dark-border;
+
+    .product-name, h3 {
+      color: $white;
+    }
+
+    .product-price {
+      color: $primary-soft;
+    }
+  }
+
+  .article-content {
+    h3 {
+      color: $white;
+    }
+
+    p {
+      color: $dark-text-muted;
+    }
+  }
+
+  .products-filter-bar {
+    background: $dark-surface;
+    border-color: $dark-border;
+
+    .brand-tab {
+      background: $dark-surface-2;
+      border-color: $dark-border;
+      color: $dark-text-muted;
+
+      &.active {
+        background: $primary-mid;
+        color: $white;
+      }
+    }
+
+    .sort-and-stock-row select {
+      background: $dark-surface-2;
+      border-color: $dark-border;
+      color: $white;
+    }
+
+    .stock-toggle-label {
+      color: $dark-text-muted;
+    }
+
+    .cat-pill {
+      background: $dark-surface-2;
+      color: $dark-text-muted;
+
+      &.active {
+        background: $primary-mid;
+        color: $white;
+      }
+    }
+  }
+
+  .prod-item {
+    background: $dark-surface;
+    border-color: $dark-border;
+
+    .prod-title {
+      color: $white;
+    }
+
+    .prod-price {
+      color: $primary-soft;
+    }
+
+    .prod-actions-overlay button {
+      background: $dark-surface-2;
+      border-color: $dark-border;
+      color: $dark-text;
+    }
+
+    .prod-specs {
+      border-top-color: $dark-border;
+
+      .spec-value {
+        color: $dark-text;
+      }
+    }
+  }
+
+  .show-more-btn {
+    background: $dark-surface;
+    border-color: $primary-soft;
+    color: $primary-soft;
+
+    &:hover {
+      background: $primary-soft;
+      color: $dark-bg;
+    }
+  }
+
+  .text {
+    p {
+      color: $dark-text-muted;
+    }
+
+    .seo-accordion-item {
+      background: $dark-surface;
+      border-color: $dark-border;
+
+      .seo-accordion-header {
+        color: $white;
+      }
+
+      .seo-accordion-body {
+        color: $dark-text-muted;
+      }
+    }
+  }
+
+  .modal-card {
+    background: $dark-surface;
+    color: $dark-text;
+
+    .modal-header {
+      background: $dark-bg;
+      border-bottom-color: $dark-border;
+
+      .modal-title {
+        color: $primary-soft;
+      }
+
+      .modal-close-btn {
+        background: $dark-surface-2;
+        border-color: $dark-border;
+        color: $dark-text-muted;
+      }
+    }
+
+    .modal-footer {
+      background: $dark-bg;
+      border-top-color: $dark-border;
+    }
+
+    .quickview-gallery {
+      background: $dark-bg;
+      border-color: $dark-border;
+    }
+
+    .quickview-details {
+      .qv-title {
+        color: $white;
+      }
+
+      .qv-price-box {
+        background: $dark-surface-2;
+
+        .qv-price {
+          color: $primary-soft;
+        }
+      }
+
+      .qv-specs-table .qv-spec-item {
+        background: $dark-surface-2;
+
+        span.v {
+          color: $dark-text;
+        }
+      }
+    }
+
+    .calc-form {
+      .calc-field label {
+        color: $dark-text;
+      }
+
+      select {
+        background: $dark-surface-2;
+        border-color: $dark-border;
+        color: $white;
+      }
+
+      .preset-buttons button.preset-btn {
+        background: $dark-surface-2;
+        border-color: $dark-border;
+        color: $dark-text-muted;
+
+        &.active {
+          background: $primary-mid;
+          color: $white;
+        }
+      }
+
+      .months-selection .month-btn {
+        background: $dark-surface-2;
+        border-color: $dark-border;
+        color: $dark-text-muted;
+
+        &.active {
+          background: $primary-mid;
+          color: $white;
+        }
+      }
+    }
+
+    .branch-tab-btn {
+      background: $dark-surface-2;
+      border-color: $dark-border;
+      color: $dark-text-muted;
+
+      &.active {
+        background: $primary-mid;
+        color: $white;
+      }
+    }
+
+    .branch-card-item {
+      background: $dark-bg;
+      border-color: $dark-border;
+
+      h4 {
+        color: $primary-soft;
+      }
+
+      p {
+        color: $dark-text-muted;
+      }
+    }
+
+    .compare-controls {
+      background: $dark-bg;
+      border-color: $dark-border;
+
+      select {
+        background: $dark-surface-2;
+        border-color: $dark-border;
+        color: $white;
+      }
+    }
+
+    table.compare-table {
+      th, td {
+        border-color: $dark-border;
+      }
+
+      th {
+        background: $dark-bg;
+        color: $primary-soft;
+      }
+
+      .bike-head {
+        background: $dark-surface;
+
+        .bike-head-name {
+          color: $white;
+        }
+
+        .bike-head-price {
+          color: $primary-soft;
+        }
+      }
+
+      td {
+        color: $dark-text;
+
+        &.diff-val {
+          background: $dark-surface-2;
+        }
+      }
+    }
+
+    .modal-form .form-group {
+      label {
+        color: $dark-text;
+      }
+
+      input, select, textarea {
+        background: $dark-surface-2;
+        border-color: $dark-border;
+        color: $white;
+      }
+    }
+  }
+
+  footer {
+    background: #0d1017;
+    border-top: 1px solid $dark-border;
+  }
+}

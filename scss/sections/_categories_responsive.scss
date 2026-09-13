@@ -1,0 +1,61 @@
+// CATEGORIES RESPONSIVE STYLES
+
+// 480px
+@media (max-width: $bp-mobile) {
+  .categories {
+    padding: 20px 14px;
+
+    > h2 {
+      &::before,
+      &::after {
+        display: none;
+      }
+    }
+  }
+
+  .categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .category-card {
+    > h3 {
+      font-size: 1rem;
+    }
+
+    > img {
+      height: 110px;
+    }
+  }
+
+  .quick-access {
+    grid-template-columns: 1fr;
+    padding: 16px 14px;
+    gap: 14px;
+  }
+}
+
+// 768px
+@media (min-width: #{$bp-mobile + 1px}) and (max-width: $bp-tablet) {
+  .categories {
+    padding: 28px 30px;
+
+    > h2 {
+      &::before,
+      &::after {
+        width: 100px;
+      }
+    }
+  }
+
+  .categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  .quick-access {
+    grid-template-columns: 1fr;
+    padding: 20px 20px;
+    gap: 14px;
+  }
+}

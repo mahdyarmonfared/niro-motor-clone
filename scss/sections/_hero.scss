@@ -1,0 +1,79 @@
+.hero-slider {
+  position: relative;
+  width: 100%;
+  user-select: none;
+}
+
+.hero-track {
+  position: relative;
+  width: 100%;
+}
+
+.hero-slide {
+  display: none;
+  width: 100%;
+  height: clamp(340px, 55vw, 680px);
+  object-fit: cover;
+  object-position: center top;
+
+  &.show {
+    display: block;
+  }
+}
+
+.hero-prev,
+.hero-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: $primary;
+  color: $white;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    opacity $transition,
+    transform $transition;
+
+  &:hover {
+    opacity: 0.85;
+    transform: translateY(-50%) scale(1.08);
+  }
+}
+
+.hero-prev {
+  right: 16px;
+}
+.hero-next {
+  left: 16px;
+}
+
+.hero-dots {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+
+  .dot {
+    width: 32px;
+    height: 4px;
+    border-radius: $radius-xs;
+    background: rgba(255, 255, 255, 0.4);
+    cursor: pointer;
+    transition: all $transition;
+
+    &.active {
+      background: $white;
+      width: 48px;
+    }
+  }
+}
+

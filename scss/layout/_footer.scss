@@ -1,0 +1,141 @@
+footer {
+  background: $white;
+  color: $dark-mid;
+  direction: rtl;
+}
+
+.footer-top {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 28px $padding-page;
+}
+
+.footer-logo {
+  > img {
+    height: 48px;
+    object-fit: contain;
+  }
+}
+
+.footer-slogan {
+  > p {
+    font-size: 0.95rem;
+    color: $primary-soft;
+    font-weight: 600;
+  }
+}
+
+.footer-middle {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 32px;
+  padding: 36px $padding-page;
+  border-bottom: 1px solid #eee;
+}
+
+.footer-about {
+  > p {
+    font-size: 0.83rem;
+    color: $primary-soft;
+    line-height: 1.9;
+  }
+}
+
+.footer-links {
+  > h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: $primary-mid;
+    margin-bottom: 16px;
+  }
+
+  > ul {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    > li {
+      > a {
+        font-size: 0.82rem;
+        color: $primary-soft;
+        transition: color $transition;
+
+        &:hover {
+          color: $primary-mid;
+        }
+      }
+    }
+  }
+}
+
+.footer-contact {
+  display: flex;
+  gap: 40px;
+  padding: 24px $padding-page;
+  border-bottom: 1px solid #eee;
+  align-items: flex-start;
+}
+
+.footer-phone,
+.footer-address {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: $dark-soft;
+
+  > i {
+    font-size: 1.1rem;
+    color: $primary-mid;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+}
+
+.footer-address {
+  > span {
+    line-height: 1.7;
+  }
+}
+
+.footer-bottom {
+  padding: 20px $padding-page;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  > p {
+    font-size: 0.8rem;
+    color: $gray-light;
+  }
+}
+
+.footer-btn {
+  background: $primary-mid;
+  color: $white;
+  border-radius: 50px;
+  padding: 10px 60px;
+  font-size: 0.9rem;
+  font-weight: 400;
+  transition:
+    opacity $transition,
+    transform 0.15s;
+
+  &:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+  }
+}
+
+.footer-social {
+  > a {
+    font-size: 1.5rem;
+    color: $primary;
+    transition: opacity $transition;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}

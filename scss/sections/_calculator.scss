@@ -1,0 +1,213 @@
+// ══════════════════════════════════════
+// INSTALLMENT CALCULATOR STYLES
+// ══════════════════════════════════════
+
+.calculator-container {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 28px;
+  align-items: start;
+
+  .calc-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    .calc-field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+
+      label {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: $dark-mid;
+        display: flex;
+        justify-content: space-between;
+
+        span.val-badge {
+          color: $primary;
+          font-weight: 800;
+        }
+      }
+
+      select {
+        padding: 10px 14px;
+        border-radius: $radius-sm;
+        border: 1px solid $gray-border;
+        background: $page-bg;
+        font-family: inherit;
+        font-size: 0.9rem;
+        color: $dark;
+        outline: none;
+        cursor: pointer;
+
+        &:focus {
+          border-color: $primary;
+          background: $white;
+        }
+      }
+
+      input[type="range"] {
+        width: 100%;
+        accent-color: $primary;
+        cursor: pointer;
+      }
+    }
+
+    .preset-buttons {
+      display: flex;
+      gap: 8px;
+
+      button.preset-btn {
+        flex: 1;
+        padding: 6px 10px;
+        border-radius: $radius-sm;
+        border: 1px solid $gray-border;
+        background: $page-bg;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: $dark-mid;
+        cursor: pointer;
+        transition: all $transition;
+
+        &:hover {
+          background: $primary-bg;
+          color: $primary;
+        }
+
+        &.active {
+          background: $primary;
+          color: $white;
+          border-color: $primary;
+        }
+      }
+    }
+
+    .months-selection {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+
+      .month-btn {
+        padding: 10px 6px;
+        border-radius: $radius-sm;
+        border: 1px solid $gray-border;
+        background: $page-bg;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: $dark-mid;
+        cursor: pointer;
+        text-align: center;
+        transition: all $transition;
+
+        &:hover {
+          border-color: $primary;
+          color: $primary;
+        }
+
+        &.active {
+          background: $primary;
+          color: $white;
+          border-color: $primary;
+        }
+      }
+    }
+  }
+
+  .calc-summary-card {
+    background: linear-gradient(145deg, #122d63, #1e458e);
+    border-radius: $radius-xl;
+    padding: 24px;
+    color: $white;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: 0 10px 30px rgba(18, 45, 99, 0.25);
+
+    .summary-header {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      padding-bottom: 12px;
+
+      h4 {
+        font-size: 1rem;
+        font-weight: 700;
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .selected-bike-name {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: $white;
+        margin-top: 4px;
+      }
+    }
+
+    .summary-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+
+      .s-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.86rem;
+
+        .lbl {
+          color: rgba(255, 255, 255, 0.75);
+        }
+
+        .val {
+          font-weight: 700;
+          color: $white;
+          direction: rtl;
+        }
+
+        &.highlight {
+          background: rgba(255, 255, 255, 0.12);
+          padding: 10px 14px;
+          border-radius: $radius-sm;
+          margin-top: 4px;
+
+          .lbl {
+            color: #fde047;
+            font-weight: 800;
+            font-size: 0.95rem;
+          }
+
+          .val {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: #fde047;
+          }
+        }
+      }
+    }
+
+    .btn-submit-installment {
+      width: 100%;
+      padding: 12px;
+      background: #10b981;
+      color: $white;
+      border: none;
+      border-radius: $radius-md;
+      font-size: 0.95rem;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background $transition, transform $transition;
+
+      &:hover {
+        background: #059669;
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+@media (max-width: $bp-tablet) {
+  .calculator-container {
+    grid-template-columns: 1fr;
+  }
+}
