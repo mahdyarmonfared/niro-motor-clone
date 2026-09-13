@@ -38,12 +38,17 @@
             <i class="bx bx-moon"></i>
           </button>
 
-          <button class="btn-header-icon" id="btn-open-wishlist" title="علاقه‌مندی‌ها">
+          <button class="btn-header-icon" id="btn-open-cart" onclick="openCartModal()" title="سبد خرید">
+            <i class="bx bx-cart"></i>
+            <span class="badge-counter cart-counter" style="display: none;">0</span>
+          </button>
+
+          <button class="btn-header-icon" id="btn-open-wishlist" onclick="openWishlistModal()" title="علاقه‌مندی‌ها">
             <i class="bx bx-heart"></i>
             <span class="badge-counter wishlist-counter" style="display: none;">0</span>
           </button>
 
-          <button class="btn-header-icon" id="btn-open-compare" title="مقایسه فنی موتورسیکلت‌ها">
+          <button class="btn-header-icon" id="btn-open-compare" onclick="openCompareModal()" title="مقایسه فنی موتورسیکلت‌ها">
             <i class="bx bx-git-compare"></i>
             <span class="badge-counter compare-counter" style="display: none;">0</span>
           </button>
@@ -132,7 +137,7 @@
           <li id="nav-branches"><i class="bx bx-map"></i> نمایندگی فروش</li>
           <li id="nav-services"><i class="bx bx-wrench"></i> خدمات پس از فروش و گارانتی</li>
           <li id="nav-calculator"><i class="bx bx-calculator"></i> محاسبه‌گر اقساط</li>
-          <li class="btn-open-emergency"><i class="bx bx-car"></i> امداد موتور</li>
+          <li class="btn-open-emergency" onclick="openEmergencyModal(event)" style="cursor: pointer;"><i class="bx bx-car"></i> امداد موتور</li>
         </ul>
         <a href="tel:02147762" class="header-phone">
           <i class="bx bx-phone-call"></i>
@@ -182,6 +187,21 @@
           <li>
             <button class="drawer-link" onclick="openInstallmentModalFor(productsData[0].id); document.getElementById('mobile-drawer').classList.remove('open'); document.getElementById('drawer-backdrop').classList.remove('open');">
               <span class="drawer-label"><i class="bx bx-calculator"></i> محاسبه‌گر اقساط</span>
+            </button>
+          </li>
+          <li>
+            <button class="drawer-link" onclick="openCartModal(); document.getElementById('mobile-drawer').classList.remove('open'); document.getElementById('drawer-backdrop').classList.remove('open');">
+              <span class="drawer-label"><i class="bx bx-cart"></i> سبد خرید و سفارش آنلاین</span>
+            </button>
+          </li>
+          <li>
+            <button class="drawer-link" onclick="openWishlistModal(); document.getElementById('mobile-drawer').classList.remove('open'); document.getElementById('drawer-backdrop').classList.remove('open');">
+              <span class="drawer-label"><i class="bx bx-heart"></i> لیست علاقه‌مندی‌ها</span>
+            </button>
+          </li>
+          <li>
+            <button class="drawer-link" onclick="openCompareModal(); document.getElementById('mobile-drawer').classList.remove('open'); document.getElementById('drawer-backdrop').classList.remove('open');">
+              <span class="drawer-label"><i class="bx bx-git-compare"></i> مقایسه فنی محصولات</span>
             </button>
           </li>
           <li>
@@ -506,7 +526,7 @@
         <div class="footer-links">
           <h4>خدمات تخصصی</h4>
           <ul>
-            <li><a href="#" class="btn-open-emergency">امداد موتور شبانه روزی</a></li>
+            <li><a href="#" class="btn-open-emergency" onclick="openEmergencyModal(event)">امداد موتور شبانه روزی</a></li>
             <li><a href="#" onclick="document.getElementById('modal-appointment').classList.add('open');">نوبت دهی خدمات سرویس</a></li>
             <li><a href="#">دفترچه راهنمای محصولات</a></li>
             <li><a href="#">آیین نامه حقوق مصرف کنندگان</a></li>
@@ -758,12 +778,26 @@
       </div>
     </div>
 
+    <!-- MODAL: CART -->
+    <div class="modal-backdrop" id="modal-cart">
+      <div class="modal-card modal-lg">
+        <div class="modal-header">
+          <div class="modal-title"><i class="bx bx-shopping-bag"></i> سبد خرید و ثبت سفارش آنلاین</div>
+          <button class="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body" id="cart-content-container"></div>
+      </div>
+    </div>
+
     <!-- FLOATING ACTIONS -->
-    <button class="floating-emergency-btn btn-open-emergency" title="امداد موتور ۲۴ ساعته">
+    <button class="floating-emergency-btn btn-open-emergency" onclick="openEmergencyModal(event)" title="امداد موتور ۲۴ ساعته">
       <i class="bx bx-car"></i>
       <span>امداد موتور</span>
     </button>
     <button class="go-to-top" title="بازگشت به بالای صفحه" aria-label="بالای صفحه"><i class="bx bx-up-arrow-alt"></i></button>
+
+    <!-- TOAST NOTIFICATIONS CONTAINER -->
+    <div id="toast-container" class="toast-container"></div>
 
     <script src="js/script.js"></script>
   </body>

@@ -200,6 +200,7 @@ const state = {
   sortBy: "default",
   searchQuery: "",
   visibleCount: 6,
+  cart: JSON.parse(localStorage.getItem("niro_cart") || "[]"),
   wishlist: JSON.parse(localStorage.getItem("niro_wishlist") || "[]"),
   compareList: JSON.parse(localStorage.getItem("niro_compare") || "[]"),
   theme: localStorage.getItem("niro_theme") || "light",
@@ -213,7 +214,38 @@ const formatPrice = (num) => {
 };
 
 // ══════════════════════════════════════
-// 3. THEME TOGGLE (DARK / LIGHT)
+// 3. TOAST NOTIFICATION COMPONENT
+// ══════════════════════════════════════
+window.showToast = (message, type = "success") => {
+  let container = document.getElementById("toast-container");
+  if (!container) {
+    container = document.createElement("div");
+    container.id = "toast-container";
+    container.className = "toast-container";
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement("div");
+  toast.className = `toast-item toast-${type}`;
+  let icon = "bx-check-circle";
+  if (type === "info") icon = "bx-info-circle";
+  if (type === "error") icon = "bx-error-circle";
+
+  toast.innerHTML = `
+    <i class="bx ${icon}"></i>
+    <span>${message}</span>
+  `;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add("fade-out");
+    setTimeout(() => toast.remove(), 300);
+  }, 3200);
+};
+
+// ══════════════════════════════════════
+// 4. THEME TOGGLE (DARK / LIGHT)
 // ══════════════════════════════════════
 const initTheme = () => {
   const themeToggleBtn = document.getElementById("btn-toggle-theme");
@@ -241,12 +273,12 @@ const initTheme = () => {
 };
 
 // ══════════════════════════════════════
-// 4. USER AUTH STATE IN HEADER
+// 5. USER AUTH STATE IN HEADER
 // ══════════════════════════════════════
 const renderHeaderUser = () => {
   const actionsContainer = document.querySelector(".header-actions");
   const loginBtn = document.getElementById("btn-header-login");
-  const existingUserProfile = actionsContainer.querySelector(".user-logged-in");
+  const existingUserProfile = actionsContainer ? actionsContainer.querySelector(".user-logged-in") : null;
   if (existingUserProfile) existingUserProfile.remove();
 
   if (state.currentUser) {
@@ -266,9 +298,9 @@ const renderHeaderUser = () => {
         <i class="bx bx-chevron-down"></i>
       </button>
       <div class="user-dropdown" id="user-dropdown-menu">
-        <a href="#" id="menu-my-orders"><i class="bx bx-package"></i> پیگیری سفارشات</a>
-        <a href="#" id="menu-my-installments"><i class="bx bx-calculator"></i> استعلام اقساط</a>
-        <a href="#" id="menu-warranty"><i class="bx bx-shield-quarter"></i> کارت گارانتی</a>
+        <a href="#" onclick="openCartModal()"><i class="bx bx-cart"></i> سبد خرید من</a>
+        <a href="#" onclick="openWishlistModal()"><i class="bx bx-heart"></i> علاقه‌مندی‌ها</a>
+        <a href="#" onclick="document.getElementById('modal-warranty').classList.add('open')"><i class="bx bx-shield-quarter"></i> استعلام گارانتی</a>
         <button class="btn-logout" id="btn-logout-action"><i class="bx bx-log-out"></i> خروج از حساب</button>
       </div>
     `;
@@ -292,7 +324,7 @@ const renderHeaderUser = () => {
         localStorage.removeItem("currentUser");
         state.currentUser = null;
         renderHeaderUser();
-        alert("از حساب کاربری خارج شدید.");
+        showToast("از حساب کاربری خارج شدید.", "info");
       });
   } else {
     if (loginBtn) loginBtn.style.display = "flex";
@@ -300,14 +332,14 @@ const renderHeaderUser = () => {
 };
 
 // ══════════════════════════════════════
-// 5. HERO SLIDER ENGINE
+// 6. HERO SLIDER ENGINE
 // ══════════════════════════════════════
 const initHeroSlider = () => {
   const heroSlideEls = document.querySelectorAll(".hero-slide");
   const heroPrevBtn = document.querySelector(".hero-prev");
   const heroNextBtn = document.querySelector(".hero-next");
   const heroTrack = document.querySelector(".hero-track");
-  if (!heroSlideEls.length) return;
+  if (!heroSlideEls.length || !heroTrack) return;
 
   // Render hero dots
   let dotsContainer = document.querySelector(".hero-dots");
@@ -378,7 +410,7 @@ const initHeroSlider = () => {
 };
 
 // ══════════════════════════════════════
-// 6. BEST SELLER SLIDER
+// 7. BEST SELLER SLIDER
 // ══════════════════════════════════════
 const initBestSellersSlider = () => {
   const slidesContainer = document.getElementById("best-seller-slides");
@@ -394,7 +426,14 @@ const initBestSellersSlider = () => {
       <img src="${product.img}" alt="${product.name}" loading="lazy" />
       <h3 class="product-name">${product.name}</h3>
       <span class="product-price ${!product.available ? "unavailable" : ""}">${product.price}</span>
-      <button class="btn-detail" onclick="openProductQuickView('${product.id}')">مشاهده محصول</button>
+      <div style="display: flex; gap: 6px; width: 100%;">
+        <button class="btn-detail" style="background: #10b981; flex: 1;" onclick="addToCart('${product.id}', event)">
+          <i class="bx bx-cart-add"></i> خرید
+        </button>
+        <button class="btn-detail" style="flex: 1;" onclick="openProductQuickView('${product.id}')">
+          جزئیات
+        </button>
+      </div>
     </div>
   `,
     )
@@ -431,7 +470,7 @@ const initBestSellersSlider = () => {
 };
 
 // ══════════════════════════════════════
-// 7. PRODUCT CATALOG & FILTER SYSTEM
+// 8. PRODUCT CATALOG & FILTER SYSTEM
 // ══════════════════════════════════════
 const renderProductsGrid = () => {
   const gridEl = document.querySelector(".products-grid");
@@ -440,25 +479,21 @@ const renderProductsGrid = () => {
   if (!gridEl) return;
 
   let filtered = productsData.filter((p) => {
-    // Brand filter
     if (
       state.currentBrand !== "all" &&
       p.brand.toLowerCase() !== state.currentBrand.toLowerCase()
     ) {
       return false;
     }
-    // Category filter
     if (state.currentCategory !== "all" && p.category !== state.currentCategory) {
       return false;
     }
-    // Stock filter
     if (state.inStockOnly && !p.available) {
       return false;
     }
     return true;
   });
 
-  // Sorting
   if (state.sortBy === "price-asc") {
     filtered.sort(
       (a, b) =>
@@ -550,15 +585,23 @@ const renderProductsGrid = () => {
           <div class="spec-item"><span class="spec-label">کلاس</span><span class="spec-value">${product.category}</span></div>
         </div>
 
-        <button class="btn-view-details" onclick="openProductQuickView('${product.id}')">
-          <i class="bx bx-info-circle"></i> جزئیات و خرید
-        </button>
+        <div style="display: flex; gap: 8px; margin-top: 10px;">
+          ${
+            product.available
+              ? `<button class="btn-view-details" style="flex: 1; background: #10b981; margin-top: 0;" onclick="addToCart('${product.id}', event)">
+                  <i class="bx bx-cart-add"></i> خرید
+                </button>`
+              : ""
+          }
+          <button class="btn-view-details" style="flex: 1; margin-top: 0;" onclick="openProductQuickView('${product.id}')">
+            <i class="bx bx-info-circle"></i> جزئیات
+          </button>
+        </div>
       </div>
     `;
     })
     .join("");
 
-  // Show more button control
   if (showMoreBtnWrap) {
     if (visibleItems.length < filtered.length) {
       showMoreBtnWrap.style.display = "flex";
@@ -590,7 +633,6 @@ window.resetFilters = () => {
 };
 
 const initProductFilters = () => {
-  // Brand tabs
   document.querySelectorAll(".brand-tab").forEach((tab) => {
     tab.addEventListener("click", () => {
       document
@@ -603,7 +645,6 @@ const initProductFilters = () => {
     });
   });
 
-  // Category pills
   document.querySelectorAll(".cat-pill").forEach((pill) => {
     pill.addEventListener("click", () => {
       document
@@ -616,7 +657,6 @@ const initProductFilters = () => {
     });
   });
 
-  // Stock checkbox
   const stockCheck = document.getElementById("filter-stock");
   if (stockCheck) {
     stockCheck.addEventListener("change", (e) => {
@@ -626,7 +666,6 @@ const initProductFilters = () => {
     });
   }
 
-  // Sort select
   const sortSelect = document.getElementById("sort-select");
   if (sortSelect) {
     sortSelect.addEventListener("change", (e) => {
@@ -635,7 +674,6 @@ const initProductFilters = () => {
     });
   }
 
-  // Show more button
   const showMoreBtn = document.getElementById("btn-load-more");
   if (showMoreBtn) {
     showMoreBtn.addEventListener("click", () => {
@@ -644,7 +682,6 @@ const initProductFilters = () => {
     });
   }
 
-  // Click on Brand cards in "برند ها" section
   document.querySelectorAll(".brand-card").forEach((card) => {
     card.addEventListener("click", () => {
       const brand = card.dataset.brand;
@@ -663,7 +700,6 @@ const initProductFilters = () => {
     });
   });
 
-  // Click on Category cards in "دسته بندی ها" section
   document.querySelectorAll(".category-card").forEach((card) => {
     card.addEventListener("click", () => {
       const cat = card.dataset.category;
@@ -681,7 +717,7 @@ const initProductFilters = () => {
 };
 
 // ══════════════════════════════════════
-// 8. LIVE SEARCH WITH INSTANT RESULTS
+// 9. LIVE SEARCH WITH INSTANT RESULTS
 // ══════════════════════════════════════
 const initLiveSearch = () => {
   const headerSearchEl = document.querySelector(".header-search");
@@ -693,22 +729,23 @@ const initLiveSearch = () => {
   const resultsContainer = document.getElementById("search-results-container");
 
   const openSearch = () => {
-    searchPanelEl.classList.add("open");
-    searchOverlayEl.classList.add("open");
-    searchInputEl.focus();
-    renderSearchResults(searchInputEl.value.trim());
+    if (searchPanelEl) searchPanelEl.classList.add("open");
+    if (searchOverlayEl) searchOverlayEl.classList.add("open");
+    if (searchInputEl) {
+      searchInputEl.focus();
+      renderSearchResults(searchInputEl.value.trim());
+    }
   };
 
   const closeSearch = () => {
-    searchPanelEl.classList.remove("open");
-    searchOverlayEl.classList.remove("open");
+    if (searchPanelEl) searchPanelEl.classList.remove("open");
+    if (searchOverlayEl) searchOverlayEl.classList.remove("open");
   };
 
-  headerSearchEl.addEventListener("click", openSearch);
-  searchPanelCloseEl.addEventListener("click", closeSearch);
-  searchOverlayEl.addEventListener("click", closeSearch);
+  if (headerSearchEl) headerSearchEl.addEventListener("click", openSearch);
+  if (searchPanelCloseEl) searchPanelCloseEl.addEventListener("click", closeSearch);
+  if (searchOverlayEl) searchOverlayEl.addEventListener("click", closeSearch);
 
-  // Keyboard shortcut Ctrl+K
   document.addEventListener("keydown", (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === "k") {
       e.preventDefault();
@@ -754,7 +791,7 @@ const initLiveSearch = () => {
     resultsContainer.innerHTML = matches
       .map(
         (product) => `
-      <div class="search-result-item" onclick="openProductQuickView('${product.id}'); document.querySelector('.search-panel').classList.remove('open'); document.querySelector('.search-overlay').classList.remove('open');">
+      <div class="search-result-item" onclick="openProductQuickView('${product.id}'); closeSearch();">
         <div class="res-info">
           <img src="${product.img}" alt="${product.name}" />
           <div class="res-texts">
@@ -776,12 +813,14 @@ const initLiveSearch = () => {
   };
 
   let debounceTimer = null;
-  searchInputEl.addEventListener("input", (e) => {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => {
-      renderSearchResults(e.target.value.trim());
-    }, 150);
-  });
+  if (searchInputEl) {
+    searchInputEl.addEventListener("input", (e) => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        renderSearchResults(e.target.value.trim());
+      }, 150);
+    });
+  }
 
   if (clearBtn) {
     clearBtn.addEventListener("click", () => {
@@ -793,7 +832,7 @@ const initLiveSearch = () => {
 };
 
 // ══════════════════════════════════════
-// 9. PRODUCT QUICK VIEW MODAL
+// 10. PRODUCT QUICK VIEW MODAL
 // ══════════════════════════════════════
 window.openProductQuickView = (productId, event) => {
   if (event) event.stopPropagation();
@@ -801,7 +840,8 @@ window.openProductQuickView = (productId, event) => {
   if (!product) return;
 
   const modal = document.getElementById("modal-quickview");
-  const modalBody = modal.querySelector(".modal-body");
+  const modalBody = modal ? modal.querySelector(".modal-body") : null;
+  if (!modal || !modalBody) return;
 
   const isFav = state.wishlist.includes(product.id);
   const isComparing = state.compareList.includes(product.id);
@@ -840,18 +880,32 @@ window.openProductQuickView = (productId, event) => {
           <div class="qv-spec-item"><span class="k">سیستم خنک‌کننده</span><span class="v">${product.cooling}</span></div>
         </div>
 
-        <div class="qv-actions">
+        <div class="qv-actions" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px;">
+          ${
+            product.available
+              ? `<button class="btn-view-details" style="flex: 1 1 45%; background: #10b981; margin: 0; padding: 12px 16px;" onclick="addToCart('${product.id}')">
+                  <i class="bx bx-cart-add" style="font-size: 1.2rem;"></i> افزودن به سبد خرید
+                </button>`
+              : ""
+          }
           ${
             product.installmentEligible
-              ? `<button class="btn-calc-plan" onclick="closeAllModals(); openInstallmentModalFor('${product.id}')">
+              ? `<button class="btn-calc-plan" style="flex: 1 1 45%; margin: 0;" onclick="closeAllModals(); openInstallmentModalFor('${product.id}')">
                   <i class="bx bx-calculator"></i> محاسبه طرح اقساطی
                 </button>`
               : ""
           }
-          <button class="btn-compare-add" onclick="toggleCompare('${product.id}')">
-            <i class="bx ${isComparing ? "bx-check-double" : "bx-git-compare"}"></i>
-            ${isComparing ? "در لیست مقایسه" : "افزودن به مقایسه"}
+          <button class="btn-compare-add" style="flex: 1 1 30%;" onclick="toggleWishlist('${product.id}'); openProductQuickView('${product.id}');">
+            <i class="bx ${isFav ? "bxs-heart" : "bx-heart"}" style="color: ${isFav ? "#ef4444" : "inherit"};"></i>
+            ${isFav ? "در علاقه‌مندی‌ها" : "علاقه‌مندی"}
           </button>
+          <button class="btn-compare-add" style="flex: 1 1 30%;" onclick="toggleCompare('${product.id}'); openProductQuickView('${product.id}');">
+            <i class="bx ${isComparing ? "bx-check-double" : "bx-git-compare"}"></i>
+            ${isComparing ? "در لیست مقایسه" : "مقایسه"}
+          </button>
+          <a href="tel:02147762" class="btn-compare-add" style="flex: 1 1 30%; text-decoration: none; justify-content: center; display: flex; align-items: center; gap: 6px;">
+            <i class="bx bx-phone-call"></i> مشاوره تلفنی
+          </a>
         </div>
       </div>
     </div>
@@ -861,7 +915,346 @@ window.openProductQuickView = (productId, event) => {
 };
 
 // ══════════════════════════════════════
-// 10. INSTALLMENT CALCULATOR LOGIC
+// 11. CART SYSTEM (سبد خرید)
+// ══════════════════════════════════════
+window.addToCart = (productId, event) => {
+  if (event) event.stopPropagation();
+  const product = productsData.find((p) => p.id === productId);
+  if (!product) return;
+
+  if (!product.available) {
+    showToast("این محصول در حال حاضر ناموجود است.", "error");
+    return;
+  }
+
+  const existing = state.cart.find((item) => item.id === productId);
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    state.cart.push({
+      id: product.id,
+      name: product.name,
+      brand: product.brand,
+      price: product.price,
+      numericPrice: product.numericPrice,
+      img: product.img,
+      quantity: 1,
+    });
+  }
+
+  localStorage.setItem("niro_cart", JSON.stringify(state.cart));
+  updateCartBadges();
+  showToast(`«${product.name}» به سبد خرید افزوده شد.`);
+};
+
+window.removeFromCart = (productId) => {
+  state.cart = state.cart.filter((item) => item.id !== productId);
+  localStorage.setItem("niro_cart", JSON.stringify(state.cart));
+  updateCartBadges();
+  renderCartModal();
+  showToast("محصول از سبد خرید حذف شد.", "info");
+};
+
+window.updateCartQuantity = (productId, delta) => {
+  const item = state.cart.find((i) => i.id === productId);
+  if (!item) return;
+  item.quantity += delta;
+  if (item.quantity <= 0) {
+    removeFromCart(productId);
+    return;
+  }
+  localStorage.setItem("niro_cart", JSON.stringify(state.cart));
+  updateCartBadges();
+  renderCartModal();
+};
+
+window.updateCartBadges = () => {
+  const count = state.cart.reduce((sum, i) => sum + i.quantity, 0);
+  document.querySelectorAll(".cart-counter").forEach((badge) => {
+    badge.textContent = count;
+    badge.style.display = count > 0 ? "flex" : "none";
+  });
+};
+
+window.openCartModal = () => {
+  const modal = document.getElementById("modal-cart");
+  if (!modal) return;
+  renderCartModal();
+  modal.classList.add("open");
+};
+
+window.renderCartModal = () => {
+  const container = document.getElementById("cart-content-container");
+  if (!container) return;
+
+  if (state.cart.length === 0) {
+    container.innerHTML = `
+      <div class="cart-empty">
+        <i class="bx bx-shopping-bag"></i>
+        <p>سبد خرید شما در حال حاضر خالی است.</p>
+        <button onclick="closeAllModals(); document.getElementById('products-section').scrollIntoView({behavior: 'smooth'});">
+          مشاهده کاتالوگ و خرید موتور
+        </button>
+      </div>
+    `;
+    return;
+  }
+
+  const totalPrice = state.cart.reduce(
+    (sum, item) => sum + (item.numericPrice || 0) * item.quantity,
+    0,
+  );
+
+  container.innerHTML = `
+    <div class="cart-items-list">
+      ${state.cart
+        .map(
+          (item) => `
+        <div class="cart-row">
+          <div class="item-left">
+            <img src="${item.img}" alt="${item.name}" />
+            <div class="item-info">
+              <div class="item-name">${item.name}</div>
+              <div class="item-single-price">${item.price}</div>
+            </div>
+          </div>
+          <div class="item-right">
+            <div class="cart-qty-ctrl">
+              <button onclick="updateCartQuantity('${item.id}', -1)" title="کاهش تعداد">-</button>
+              <span class="qty-val">${item.quantity}</span>
+              <button onclick="updateCartQuantity('${item.id}', 1)" title="افزایش تعداد">+</button>
+            </div>
+            <div class="item-total-price">${formatPrice((item.numericPrice || 0) * item.quantity)}</div>
+            <button class="btn-del-cart" onclick="removeFromCart('${item.id}')" title="حذف از سبد"><i class="bx bx-trash"></i></button>
+          </div>
+        </div>
+      `,
+        )
+        .join("")}
+    </div>
+
+    <div class="cart-summary-box">
+      <div class="summary-row">
+        <span class="s-lbl">تعداد اقلام انتخابی:</span>
+        <span class="s-val">${state.cart.reduce((s, i) => s + i.quantity, 0)} دستگاه</span>
+      </div>
+      <div class="summary-row">
+        <span class="s-lbl">هزینه ارسال و بیمه‌نامه:</span>
+        <span class="s-val" style="color: #10b981;">رایگان (طرح ویژه نیرو موتور)</span>
+      </div>
+      <div class="summary-row total-row">
+        <span class="s-lbl">مبلغ قابل پرداخت:</span>
+        <span class="s-val">${formatPrice(totalPrice)}</span>
+      </div>
+      <button class="btn-checkout-order" onclick="alert('پیش‌فاکتور شما صادر شد! جهت هماهنگی تحویل و انتقال سند، کارشناسان نیرو موتور با شما تماس خواهند گرفت.'); closeAllModals();">
+        <i class="bx bx-check-shield"></i> ثبت نهایی سفارش و صدور فاکتور
+      </button>
+    </div>
+  `;
+};
+
+// ══════════════════════════════════════
+// 12. WISHLIST / FAVORITES
+// ══════════════════════════════════════
+window.toggleWishlist = (productId, event) => {
+  if (event) event.stopPropagation();
+  const product = productsData.find((p) => p.id === productId);
+  const name = product ? product.name : "موتورسیکلت";
+  const idx = state.wishlist.indexOf(productId);
+  if (idx !== -1) {
+    state.wishlist.splice(idx, 1);
+    showToast(`«${name}» از لیست علاقه‌مندی‌ها حذف شد.`, "info");
+  } else {
+    state.wishlist.push(productId);
+    showToast(`«${name}» به لیست علاقه‌مندی‌ها افزوده شد.`, "success");
+  }
+  localStorage.setItem("niro_wishlist", JSON.stringify(state.wishlist));
+  updateWishlistBadges();
+  renderProductsGrid();
+};
+
+window.updateWishlistBadges = () => {
+  document.querySelectorAll(".wishlist-counter").forEach((badge) => {
+    badge.textContent = state.wishlist.length;
+    badge.style.display = state.wishlist.length > 0 ? "flex" : "none";
+  });
+};
+
+window.openWishlistModal = () => {
+  const modal = document.getElementById("modal-wishlist");
+  const body = modal ? modal.querySelector(".modal-body") : null;
+  if (!modal || !body) return;
+
+  if (state.wishlist.length === 0) {
+    body.innerHTML = `
+      <div class="wishlist-empty">
+        <i class="bx bx-heart"></i>
+        <p>لیست علاقه‌مندی‌های شما خالی است.</p>
+        <button style="background: #122d63; color: #fff; border: none; padding: 8px 18px; border-radius: 6px; cursor: pointer; font-family: inherit; font-size: 0.85rem;" onclick="closeAllModals(); document.getElementById('products-section').scrollIntoView({behavior: 'smooth'});">مشاهده محصولات</button>
+      </div>
+    `;
+  } else {
+    const bikes = state.wishlist
+      .map((id) => productsData.find((p) => p.id === id))
+      .filter(Boolean);
+    body.innerHTML = `
+      <div class="wishlist-items-list">
+        ${bikes
+          .map(
+            (b) => `
+          <div class="wishlist-row">
+            <div class="item-left" onclick="closeAllModals(); openProductQuickView('${b.id}')" style="cursor: pointer;">
+              <img src="${b.img}" alt="${b.name}" />
+              <div>
+                <div class="item-name">${b.name}</div>
+                <div style="font-size: 0.78rem; color: #888;">${b.category} • ${b.engine}</div>
+              </div>
+            </div>
+            <div class="item-right">
+              <span class="item-price">${b.price}</span>
+              <button class="btn-view-details" style="padding: 4px 10px; font-size: 0.78rem; margin: 0; width: auto; background: #10b981;" onclick="addToCart('${b.id}', event)">
+                <i class="bx bx-cart-add"></i> خرید
+              </button>
+              <button class="btn-del-fav" onclick="toggleWishlist('${b.id}'); openWishlistModal();" title="حذف"><i class="bx bx-trash"></i></button>
+            </div>
+          </div>
+        `,
+          )
+          .join("")}
+      </div>
+    `;
+  }
+
+  modal.classList.add("open");
+};
+
+// ══════════════════════════════════════
+// 13. MOTORCYCLE COMPARISON TOOL
+// ══════════════════════════════════════
+window.toggleCompare = (productId, event) => {
+  if (event) event.stopPropagation();
+  const product = productsData.find((p) => p.id === productId);
+  const name = product ? product.name : "موتورسیکلت";
+  const idx = state.compareList.indexOf(productId);
+  if (idx !== -1) {
+    state.compareList.splice(idx, 1);
+    showToast(`«${name}» از لیست مقایسه حذف شد.`, "info");
+  } else {
+    if (state.compareList.length >= 3) {
+      showToast("حداکثر ۳ موتورسیکلت را می‌توانید همزمان مقایسه فرمایید.", "error");
+      return;
+    }
+    state.compareList.push(productId);
+    showToast(`«${name}» به لیست مقایسه اضافه شد.`, "success");
+  }
+  localStorage.setItem("niro_compare", JSON.stringify(state.compareList));
+  updateCompareBadges();
+  renderProductsGrid();
+};
+
+window.updateCompareBadges = () => {
+  document.querySelectorAll(".compare-counter").forEach((badge) => {
+    badge.textContent = state.compareList.length;
+    badge.style.display = state.compareList.length > 0 ? "flex" : "none";
+  });
+};
+
+window.openCompareModal = () => {
+  const modal = document.getElementById("modal-compare");
+  const container = document.getElementById("compare-content-container");
+  if (!modal || !container) return;
+
+  const bikes = state.compareList
+    .map((id) => productsData.find((p) => p.id === id))
+    .filter(Boolean);
+
+  const availableBikesToAdd = productsData.filter(
+    (p) => !state.compareList.includes(p.id),
+  );
+
+  container.innerHTML = `
+    <div class="compare-container">
+      <div class="compare-controls">
+        <label style="font-size: 0.88rem; font-weight: 700; color: #122d63;">افزودن موتور به جدول مقایسه:</label>
+        <select id="compare-add-select" style="flex: 1; padding: 8px 12px; border-radius: 6px; border: 1px solid #ddd; font-family: inherit;">
+          <option value="">-- انتخاب موتورسیکلت --</option>
+          ${availableBikesToAdd
+            .map((b) => `<option value="${b.id}">${b.name} (${b.category} - ${b.engine})</option>`)
+            .join("")}
+        </select>
+        <button class="btn-add-to-compare" onclick="
+          const sel = document.getElementById('compare-add-select');
+          if (sel && sel.value) {
+            toggleCompare(sel.value);
+            openCompareModal();
+          }
+        ">افزودن به مقایسه</button>
+      </div>
+
+      ${
+        bikes.length === 0
+          ? `
+        <div style="text-align: center; padding: 40px; color: #888;">
+          <i class="bx bx-git-compare" style="font-size: 3rem; color: #cbd5e1; display: block; margin-bottom: 12px;"></i>
+          موتورسیکلتی برای مقایسه انتخاب نشده است. از منوی بالا یک مدل را انتخاب کرده و دکمه «افزودن» را بزنید.
+        </div>
+      `
+          : `
+        <div class="compare-table-wrapper">
+          <table class="compare-table">
+            <thead>
+              <tr>
+                <th>مشخصه فنی</th>
+                ${bikes
+                  .map(
+                    (b) => `
+                  <th class="bike-head">
+                    <button class="btn-remove-col" onclick="toggleCompare('${b.id}'); openCompareModal();" title="حذف">&times;</button>
+                    <img src="${b.img}" alt="${b.name}" />
+                    <div class="bike-head-name">${b.name}</div>
+                    <div class="bike-head-price">${b.price}</div>
+                    <button class="btn-view-details" style="padding: 6px 12px; font-size: 0.8rem; margin-top: 8px; background: #10b981;" onclick="addToCart('${b.id}')">
+                      <i class="bx bx-cart-add"></i> خرید
+                    </button>
+                  </th>
+                `,
+                  )
+                  .join("")}
+              </tr>
+            </thead>
+            <tbody>
+              <tr><th>برند</th>${bikes.map((b) => `<td>${b.brand}</td>`).join("")}</tr>
+              <tr><th>کلاس</th>${bikes.map((b) => `<td>${b.category}</td>`).join("")}</tr>
+              <tr><th>حجم موتور</th>${bikes.map((b) => `<td>${b.engine}</td>`).join("")}</tr>
+              <tr><th>قدرت موتور</th>${bikes.map((b) => `<td>${b.power}</td>`).join("")}</tr>
+              <tr><th>گیربکس</th>${bikes.map((b) => `<td>${b.transmission}</td>`).join("")}</tr>
+              <tr><th>سیستم ترمز</th>${bikes.map((b) => `<td>${b.brakes}</td>`).join("")}</tr>
+              <tr><th>حداکثر سرعت</th>${bikes.map((b) => `<td>${b.speed}</td>`).join("")}</tr>
+              <tr><th>سیستم سوخت</th>${bikes.map((b) => `<td>${b.fuelSystem}</td>`).join("")}</tr>
+              <tr><th>حجم باک</th>${bikes.map((b) => `<td>${b.fuelCapacity}</td>`).join("")}</tr>
+              <tr><th>سیستم خنک‌کننده</th>${bikes.map((b) => `<td>${b.cooling}</td>`).join("")}</tr>
+            </tbody>
+          </table>
+        </div>
+      `
+      }
+    </div>
+  `;
+
+  modal.classList.add("open");
+};
+
+// ══════════════════════════════════════
+// 14. EMERGENCY ASSISTANCE MODAL
+// ══════════════════════════════════════
+window.openEmergencyModal = (event) => {
+  if (event) event.preventDefault();
+  const modal = document.getElementById("modal-emergency");
+  if (modal) modal.classList.add("open");
+};
+
+// ══════════════════════════════════════
+// 15. INSTALLMENT CALCULATOR LOGIC
 // ══════════════════════════════════════
 window.openInstallmentModalFor = (productId, event) => {
   if (event) event.stopPropagation();
@@ -879,7 +1272,7 @@ window.openInstallmentModalFor = (productId, event) => {
   }
 
   updateInstallmentCalculation();
-  modal.classList.add("open");
+  if (modal) modal.classList.add("open");
 };
 
 const initInstallmentCalculator = () => {
@@ -891,6 +1284,13 @@ const initInstallmentCalculator = () => {
 
   let selectedMonths = 12;
   let downPaymentPercent = 40;
+
+  if (bikeSelect && bikeSelect.children.length === 0) {
+    bikeSelect.innerHTML = productsData
+      .filter((p) => p.installmentEligible && p.numericPrice > 0)
+      .map((p) => `<option value="${p.id}">${p.name} - ${p.price}</option>`)
+      .join("");
+  }
 
   presetButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -929,7 +1329,7 @@ const initInstallmentCalculator = () => {
   }
 
   window.updateInstallmentCalculation = () => {
-    const bikeId = bikeSelect ? bikeSelect.value : productsData[0].id;
+    const bikeId = bikeSelect && bikeSelect.value ? bikeSelect.value : productsData[0].id;
     const bike = productsData.find((p) => p.id === bikeId) || productsData[0];
     const totalPrice = bike.numericPrice || 400000000;
 
@@ -938,7 +1338,6 @@ const initInstallmentCalculator = () => {
     );
     const loanAmount = totalPrice - downPaymentAmount;
 
-    // Monthly interest rate ~2.2%
     const monthlyRate = 0.022;
     const totalInterest = Math.round(loanAmount * monthlyRate * selectedMonths);
     const totalLoanWithInterest = loanAmount + totalInterest;
@@ -968,160 +1367,7 @@ const initInstallmentCalculator = () => {
 };
 
 // ══════════════════════════════════════
-// 11. MOTORCYCLE COMPARISON TOOL
-// ══════════════════════════════════════
-window.toggleCompare = (productId, event) => {
-  if (event) event.stopPropagation();
-  const idx = state.compareList.indexOf(productId);
-  if (idx !== -1) {
-    state.compareList.splice(idx, 1);
-  } else {
-    if (state.compareList.length >= 3) {
-      alert("حداکثر ۳ موتورسیکلت را می‌توانید همزمان مقایسه فرمایید.");
-      return;
-    }
-    state.compareList.push(productId);
-  }
-  localStorage.setItem("niro_compare", JSON.stringify(state.compareList));
-  updateCompareBadges();
-  renderProductsGrid();
-};
-
-const updateCompareBadges = () => {
-  document.querySelectorAll(".compare-counter").forEach((badge) => {
-    badge.textContent = state.compareList.length;
-    badge.style.display = state.compareList.length > 0 ? "flex" : "none";
-  });
-};
-
-const openCompareModal = () => {
-  const modal = document.getElementById("modal-compare");
-  const container = document.getElementById("compare-content-container");
-  if (!modal || !container) return;
-
-  if (state.compareList.length === 0) {
-    container.innerHTML = `
-      <div style="text-align: center; padding: 40px; color: #888;">
-        <i class="bx bx-git-compare" style="font-size: 3rem; color: #cbd5e1; display: block; margin-bottom: 12px;"></i>
-        موتورسیکلتی برای مقایسه انتخاب نشده است. از روی کارت محصولات روی آیکون مقایسه کلیک کنید.
-      </div>
-    `;
-  } else {
-    const bikes = state.compareList
-      .map((id) => productsData.find((p) => p.id === id))
-      .filter(Boolean);
-
-    container.innerHTML = `
-      <div class="compare-container">
-        <div class="compare-table-wrapper">
-          <table class="compare-table">
-            <thead>
-              <tr>
-                <th>مشخصه فنی</th>
-                ${bikes
-                  .map(
-                    (b) => `
-                  <th class="bike-head">
-                    <button class="btn-remove-col" onclick="toggleCompare('${b.id}'); openCompareModal();" title="حذف">&times;</button>
-                    <img src="${b.img}" alt="${b.name}" />
-                    <div class="bike-head-name">${b.name}</div>
-                    <div class="bike-head-price">${b.price}</div>
-                  </th>
-                `,
-                  )
-                  .join("")}
-              </tr>
-            </thead>
-            <tbody>
-              <tr><th>برند</th>${bikes.map((b) => `<td>${b.brand}</td>`).join("")}</tr>
-              <tr><th>کلاس</th>${bikes.map((b) => `<td>${b.category}</td>`).join("")}</tr>
-              <tr><th>حجم موتور</th>${bikes.map((b) => `<td>${b.engine}</td>`).join("")}</tr>
-              <tr><th>قدرت موتور</th>${bikes.map((b) => `<td>${b.power}</td>`).join("")}</tr>
-              <tr><th>گیربکس</th>${bikes.map((b) => `<td>${b.transmission}</td>`).join("")}</tr>
-              <tr><th>سیستم ترمز</th>${bikes.map((b) => `<td>${b.brakes}</td>`).join("")}</tr>
-              <tr><th>حداکثر سرعت</th>${bikes.map((b) => `<td>${b.speed}</td>`).join("")}</tr>
-              <tr><th>سیستم سوخت</th>${bikes.map((b) => `<td>${b.fuelSystem}</td>`).join("")}</tr>
-              <tr><th>حجم باک</th>${bikes.map((b) => `<td>${b.fuelCapacity}</td>`).join("")}</tr>
-              <tr><th>سیستم خنک‌کننده</th>${bikes.map((b) => `<td>${b.cooling}</td>`).join("")}</tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    `;
-  }
-
-  modal.classList.add("open");
-};
-
-// ══════════════════════════════════════
-// 12. WISHLIST / FAVORITES
-// ══════════════════════════════════════
-window.toggleWishlist = (productId, event) => {
-  if (event) event.stopPropagation();
-  const idx = state.wishlist.indexOf(productId);
-  if (idx !== -1) {
-    state.wishlist.splice(idx, 1);
-  } else {
-    state.wishlist.push(productId);
-  }
-  localStorage.setItem("niro_wishlist", JSON.stringify(state.wishlist));
-  updateWishlistBadges();
-  renderProductsGrid();
-};
-
-const updateWishlistBadges = () => {
-  document.querySelectorAll(".wishlist-counter").forEach((badge) => {
-    badge.textContent = state.wishlist.length;
-    badge.style.display = state.wishlist.length > 0 ? "flex" : "none";
-  });
-};
-
-const openWishlistModal = () => {
-  const modal = document.getElementById("modal-wishlist");
-  const body = modal.querySelector(".modal-body");
-  if (!modal || !body) return;
-
-  if (state.wishlist.length === 0) {
-    body.innerHTML = `
-      <div class="wishlist-empty">
-        <i class="bx bx-heart"></i>
-        <p>لیست علاقه‌مندی‌های شما خالی است.</p>
-      </div>
-    `;
-  } else {
-    const bikes = state.wishlist
-      .map((id) => productsData.find((p) => p.id === id))
-      .filter(Boolean);
-    body.innerHTML = `
-      <div class="wishlist-items-list">
-        ${bikes
-          .map(
-            (b) => `
-          <div class="wishlist-row">
-            <div class="item-left" onclick="closeAllModals(); openProductQuickView('${b.id}')" style="cursor: pointer;">
-              <img src="${b.img}" alt="${b.name}" />
-              <div>
-                <div class="item-name">${b.name}</div>
-                <div style="font-size: 0.78rem; color: #888;">${b.category} • ${b.engine}</div>
-              </div>
-            </div>
-            <div class="item-right">
-              <span class="item-price">${b.price}</span>
-              <button class="btn-del-fav" onclick="toggleWishlist('${b.id}'); openWishlistModal();" title="حذف"><i class="bx bx-trash"></i></button>
-            </div>
-          </div>
-        `,
-          )
-          .join("")}
-      </div>
-    `;
-  }
-
-  modal.classList.add("open");
-};
-
-// ══════════════════════════════════════
-// 13. BRANCH LOCATOR DATA & MODAL
+// 16. BRANCH LOCATOR DATA & MODAL
 // ══════════════════════════════════════
 const branchesData = [
   {
@@ -1214,7 +1460,7 @@ const initBranchLocator = () => {
 };
 
 // ══════════════════════════════════════
-// 14. MODALS MANAGEMENT
+// 17. MODALS MANAGEMENT
 // ══════════════════════════════════════
 window.closeAllModals = () => {
   document.querySelectorAll(".modal-backdrop").forEach((m) => {
@@ -1223,19 +1469,16 @@ window.closeAllModals = () => {
 };
 
 const initModals = () => {
-  // Close buttons
   document.querySelectorAll(".modal-close-btn").forEach((btn) => {
     btn.addEventListener("click", closeAllModals);
   });
 
-  // Click outside to close
   document.querySelectorAll(".modal-backdrop").forEach((backdrop) => {
     backdrop.addEventListener("click", (e) => {
       if (e.target === backdrop) closeAllModals();
     });
   });
 
-  // Nav links to modals
   const navBranches = document.getElementById("nav-branches");
   if (navBranches) {
     navBranches.addEventListener("click", () => {
@@ -1251,13 +1494,6 @@ const initModals = () => {
     });
   }
 
-  const navEmergency = document.querySelectorAll(".btn-open-emergency");
-  navEmergency.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      document.getElementById("modal-emergency").classList.add("open");
-    });
-  });
-
   const navCalculator = document.getElementById("nav-calculator");
   if (navCalculator) {
     navCalculator.addEventListener("click", () => {
@@ -1265,7 +1501,6 @@ const initModals = () => {
     });
   }
 
-  // Quick access banners
   const quickBanners = document.querySelectorAll(".quick-card");
   if (quickBanners[0]) {
     quickBanners[0].addEventListener("click", () => {
@@ -1286,7 +1521,6 @@ const initModals = () => {
     });
   }
 
-  // Installment banner click
   const installmentBanner = document.querySelector(".installment-plan");
   if (installmentBanner) {
     installmentBanner.style.cursor = "pointer";
@@ -1295,16 +1529,28 @@ const initModals = () => {
     });
   }
 
-  // Wishlist & Compare modal triggers
   const btnWishlist = document.getElementById("btn-open-wishlist");
-  if (btnWishlist) btnWishlist.addEventListener("click", openWishlistModal);
+  if (btnWishlist) {
+    btnWishlist.addEventListener("click", () => window.openWishlistModal());
+  }
 
   const btnCompare = document.getElementById("btn-open-compare");
-  if (btnCompare) btnCompare.addEventListener("click", openCompareModal);
+  if (btnCompare) {
+    btnCompare.addEventListener("click", () => window.openCompareModal());
+  }
+
+  const btnCart = document.getElementById("btn-open-cart");
+  if (btnCart) {
+    btnCart.addEventListener("click", () => window.openCartModal());
+  }
+
+  document.querySelectorAll(".btn-open-emergency").forEach((el) => {
+    el.addEventListener("click", (e) => window.openEmergencyModal(e));
+  });
 };
 
 // ══════════════════════════════════════
-// 15. MOBILE DRAWER & RESPONSIVE
+// 18. MOBILE DRAWER & RESPONSIVE
 // ══════════════════════════════════════
 const initMobileDrawer = () => {
   const openBtn = document.getElementById("btn-open-drawer");
@@ -1313,20 +1559,19 @@ const initMobileDrawer = () => {
   const backdrop = document.getElementById("drawer-backdrop");
 
   const openDrawer = () => {
-    drawer.classList.add("open");
-    backdrop.classList.add("open");
+    if (drawer) drawer.classList.add("open");
+    if (backdrop) backdrop.classList.add("open");
   };
 
   const closeDrawer = () => {
-    drawer.classList.remove("open");
-    backdrop.classList.remove("open");
+    if (drawer) drawer.classList.remove("open");
+    if (backdrop) backdrop.classList.remove("open");
   };
 
   if (openBtn) openBtn.addEventListener("click", openDrawer);
   if (closeBtn) closeBtn.addEventListener("click", closeDrawer);
   if (backdrop) backdrop.addEventListener("click", closeDrawer);
 
-  // Accordion inside mobile drawer
   const accordionToggle = document.getElementById("drawer-cat-toggle");
   const accordionContent = document.getElementById("drawer-cat-accordion");
   if (accordionToggle && accordionContent) {
@@ -1337,7 +1582,7 @@ const initMobileDrawer = () => {
 };
 
 // ══════════════════════════════════════
-// 16. SEO ACCORDION SPOILER
+// 19. SEO ACCORDION SPOILER
 // ══════════════════════════════════════
 const initSeoSpoiler = () => {
   const toggleBtn = document.getElementById("btn-toggle-seo");
@@ -1354,7 +1599,7 @@ const initSeoSpoiler = () => {
 };
 
 // ══════════════════════════════════════
-// 17. GO TO TOP & FLOATING ACTIONS
+// 20. GO TO TOP & FLOATING ACTIONS
 // ══════════════════════════════════════
 const initScrollEffects = () => {
   const goToTopBtn = document.querySelector(".go-to-top");
@@ -1389,6 +1634,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initProductFilters();
   initLiveSearch();
   initInstallmentCalculator();
+  updateCartBadges();
   updateCompareBadges();
   updateWishlistBadges();
   initBranchLocator();
